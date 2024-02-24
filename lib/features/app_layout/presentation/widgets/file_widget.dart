@@ -10,7 +10,7 @@ import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_states.dart';
-import 'package:sum_cap/features/app_layout/presentation/pages/audio_details_Screen.dart';
+import 'package:sum_cap/features/record_audio/presentation/pages/record_details.dart';
 
 class FileWidget extends StatelessWidget {
   AudioModel audio;
@@ -58,7 +58,7 @@ class FileWidget extends StatelessWidget {
           onPressed: () {
             if (audio.status == FileStatus.done) {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return AudioDetailsScreen(audioModel: audio);
+                return RecordDetails(audio: audio);
               }));
             }
           },
