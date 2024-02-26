@@ -7,6 +7,8 @@ import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.
 import 'package:sum_cap/features/app_layout/presentation/pages/app_layout.dart';
 import 'package:sum_cap/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:sum_cap/features/auth/presentation/pages/login_screen.dart';
+import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
+import 'package:sum_cap/features/record_audio/presentation/cubit/cubit/audio_recoed_cubit.dart';
 import 'package:sum_cap/features/user_profile/presentation/cubit/user_profile_cubit.dart';
 
 class MainApp extends StatelessWidget {
@@ -27,6 +29,8 @@ class MainApp extends StatelessWidget {
               ..getAudios();
           }),
           BlocProvider(create: (_) => UserProfileCubit()),
+          BlocProvider(create: (_) => AudioCubit()),
+          BlocProvider(create: (_) => AudioRecoedCubit()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

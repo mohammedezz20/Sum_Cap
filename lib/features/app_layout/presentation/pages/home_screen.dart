@@ -11,14 +11,18 @@ import 'package:sum_cap/features/app_layout/presentation/widgets/file_widget.dar
 
 import '../../../../core/cach_helper.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
   Widget build(BuildContext context) {
     var cubit = AppLayoutCubit.get(context);
-    return BlocConsumer<AppLayoutCubit, AppLayoutStates>(
-      listener: (context, state) {},
+    return BlocBuilder<AppLayoutCubit, AppLayoutStates>(
       builder: (context, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,8 +66,7 @@ class HomeScreen extends StatelessWidget {
                     separatorBuilder: (context, index) => 20.h.sizedBoxHeight,
                     itemCount: 10,
                   ))
-                : (state is AppLayoutGetUserAudioSuccessState &&
-                        cubit.audios.isNotEmpty)
+                : (cubit.audios.isNotEmpty)
                     ? Expanded(
                         child: RefreshIndicator(
                           onRefresh: () => cubit.getAudios(),

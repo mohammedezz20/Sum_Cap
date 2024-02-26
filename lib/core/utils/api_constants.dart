@@ -6,7 +6,9 @@ class APIConstants {
   static const String forgetPassword = 'users/forgotPassword';
   static const String verifyCode = 'users/verifyCode';
   static const String updatePassword = 'users/updatePassword';
-  static const String getUserAudio = 'users/audios';
+  static const String audio = 'users/audios';
+  static const String deleteAudio = 'audios/';
+  static const String editAudio = 'audios/';
 }
 
 class ApiModelConstatnts {
