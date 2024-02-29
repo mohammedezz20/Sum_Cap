@@ -12,7 +12,7 @@ class APIConstants {
 }
 
 class ApiModelConstatnts {
-  static const String apiUrl = 'http://192.168.1.5:8000';
+  static const String apiUrl = 'http://192.168.1.6:8000';
   static const String transcribttion = '/api/v1/transcribe';
   static const String summarize = '/api/v1/summarize';
 }

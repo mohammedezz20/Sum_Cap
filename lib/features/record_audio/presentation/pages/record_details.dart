@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,17 +13,30 @@ import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/enums.dart';
 import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
-import 'package:sum_cap/core/widgets/custom_button.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
-import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
-import 'package:sum_cap/features/record_audio/presentation/widgets/option_file_widget.dart';
 
-class RecordDetails extends StatelessWidget {
+import 'package:sum_cap/features/record_audio/presentation/widgets/option_file_widget.dart';
+import 'package:sum_cap/features/record_audio/presentation/widgets/play_audio_file.dart'
+    as play_audio_file;
+
+class RecordDetails extends StatefulWidget {
   AudioModel audio;
+
   RecordDetails(this.audio, {super.key});
 
   @override
+  State<RecordDetails> createState() => _RecordDetailsState();
+}
+
+class _RecordDetailsState extends State<RecordDetails> {
+  late AudioPlayer advancedPlayer;
+  @override
+  void initState() {
+    advancedPlayer = AudioPlayer();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var cubit = AudioCubit.get(context);
@@ -44,8 +58,8 @@ class RecordDetails extends StatelessWidget {
                   CupertinoButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        audio.status = FileStatus.removing;
-                        cubit.deleteAudio(audio, context);
+                        widget.audio.status = FileStatus.removing;
+                        cubit.deleteAudio(widget.audio, context);
                       },
                       child: const Icon(
                         Icons.delete_outline,
@@ -117,7 +131,7 @@ class RecordDetails extends StatelessWidget {
                                 size: 14.w,
                               ),
                               Text(
-                                "${audio.createdAt.day}/${audio.createdAt.month}/${audio.createdAt.year}",
+                                "${widget.audio.createdAt.day}/${widget.audio.createdAt.month}/${widget.audio.createdAt.year}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -128,7 +142,7 @@ class RecordDetails extends StatelessWidget {
                               20.w.sizedBoxWidth,
                               Text(
                                 DateFormat('hh:mm a').format(
-                                  audio.createdAt.toUtc().add(
+                                  widget.audio.createdAt.toUtc().add(
                                         const Duration(hours: 2),
                                       ),
                                 ),
@@ -150,7 +164,7 @@ class RecordDetails extends StatelessWidget {
                               ),
                               5.w.sizedBoxWidth,
                               Text(
-                                audio.duration,
+                                widget.audio.duration,
                               ),
                             ],
                           ),
@@ -163,7 +177,7 @@ class RecordDetails extends StatelessWidget {
                               ),
                               5.w.sizedBoxWidth,
                               Text(
-                                '${audio.transcriptionText.length}',
+                                '${widget.audio.transcriptionText.length}',
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall!
@@ -220,8 +234,8 @@ class RecordDetails extends StatelessWidget {
                             buttonText: 'Copy',
                             icon: FontAwesomeIcons.copy,
                             onTap: () {
-                              Clipboard.setData(
-                                  ClipboardData(text: audio.transcriptionText));
+                              Clipboard.setData(ClipboardData(
+                                  text: widget.audio.transcriptionText));
                               context.showAwesomeSnackbar(
                                   contentType: ContentType.success,
                                   title: '',
@@ -243,7 +257,7 @@ class RecordDetails extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                           ),
                           onTapOutside: (_) {
-                            audio.transcriptionText =
+                            widget.audio.transcriptionText =
                                 cubit.transcriptionController.text;
 
                             FocusScope.of(context).unfocus();
@@ -275,6 +289,12 @@ class RecordDetails extends StatelessWidget {
                           ),
                         ),
                       ),
+                      // PlayAudioRecordWidget(path: audio.audio),
+                      play_audio_file.AdvancedAudioPlayer(
+                        audioModel: widget.audio,
+                        // path: widget.audio.audio,
+                        // advancedPlayer: advancedPlayer,
+                      )
                     ],
                   ),
                 ),

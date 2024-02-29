@@ -15,9 +15,9 @@ import 'package:sum_cap/core/widgets/custom_button.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
 import 'package:sum_cap/features/record_audio/data/datasources/audio_record_helper.dart';
+import 'package:sum_cap/features/record_audio/presentation/cubit/audio_record_cubit/audio_recoed_cubit.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_recorder_controller.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
-import 'package:sum_cap/features/record_audio/presentation/cubit/cubit/audio_recoed_cubit.dart';
 
 import 'package:sum_cap/features/record_audio/presentation/widgets/audio_wave_widget.dart';
 
@@ -67,8 +67,20 @@ class AudioPlayerWidget extends StatelessWidget {
                       height: 40.h,
                       width: 100.w,
                       colorBorder: AppColor.redColor,
-                      onTap: () {
-                        audioRecorderController.dispose();
+                      onTap: () async {
+                        final String? path =
+                            await audioRecorderController.stop();
+
+                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        //?????????????????????????????????????????????????????????????????????
+
+                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        //?????????????????????????????????????????????????????????????????????
+
+                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        //?????????????????????????????????????????????????????????????????????
+
+                        // audioRecorderController.delete(path!);
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
@@ -141,7 +153,7 @@ class AudioPlayerWidget extends StatelessWidget {
                           cubit
                               .uploadFile(audioModel: audioModel)
                               .whenComplete(() {
-                            audioRecorderController.delete(audioModel.audio);
+                            // audioRecorderController.delete(audioModel.audio);
                           });
                           audioCubit.nameController.clear();
                           cubit.filePath = '';

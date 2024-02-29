@@ -35,7 +35,6 @@ class AudioCubit extends Cubit<AudioState> {
       emit(DeleteAudioErrorState(l.toString(), audio.title));
     }, (r) {
       emit(DeleteAudioSuccessState(r.statusCode, audio.title));
-      AppLayoutCubit.get(context).getAudios();
     });
   }
 
@@ -48,8 +47,6 @@ class AudioCubit extends Cubit<AudioState> {
     }, (r) {
       log(r.body.toString());
       emit(EditAudioSuccessState(r.statusCode));
-
-      AppLayoutCubit.get(context).getAudios();
     });
   }
 

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,7 +58,7 @@ class FileWidget extends StatelessWidget {
       builder: (context, state) {
         return CupertinoButton(
           padding: EdgeInsets.zero,
-          onPressed: () {
+          onPressed: () async {
             if (audio.status == FileStatus.done) {
               AudioCubit.get(context).tempModel = audio;
               AudioCubit.get(context).nameController.text = audio.title;
