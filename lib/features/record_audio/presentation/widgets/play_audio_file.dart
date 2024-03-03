@@ -220,7 +220,7 @@ class _AdvancedAudioPlayerState extends State<AdvancedAudioPlayer>
                 iconColor: AppColor.primaryColor,
                 buttonColor: Colors.white,
                 onPressed: () {
-                  if (_position.inSeconds - _duration.inSeconds >= 5) {
+                  if (_duration.inSeconds - _position.inSeconds >= 5) {
                     var newPosition = _position.inSeconds + 5;
 
                     advancedPlayer.seek(Duration(seconds: newPosition));

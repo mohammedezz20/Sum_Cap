@@ -48,3 +48,27 @@ class DeleteAudioErrorState extends AudioState {
 class ChangeDataStatusToReadOnly extends AudioState {}
 
 class ChangeDataStatusToReadAndWrite extends AudioState {}
+
+class TranslateAudioLoadingState extends AudioState {}
+
+class TranslateAudioSuccessState extends AudioState {
+  final String translatedText;
+  const TranslateAudioSuccessState(this.translatedText);
+}
+
+class TranslateAudioErrorState extends AudioState {
+  final String message;
+  const TranslateAudioErrorState(this.message);
+}
+
+class SummarizeAudioLoadingState extends AudioState {}
+
+class SummarizeAudioSuccessState extends AudioState {
+  final String summarizedText;
+  const SummarizeAudioSuccessState(this.summarizedText);
+}
+
+class SummarizeAudioErrorState extends AudioState {
+  final String message;
+  const SummarizeAudioErrorState(this.message);
+}

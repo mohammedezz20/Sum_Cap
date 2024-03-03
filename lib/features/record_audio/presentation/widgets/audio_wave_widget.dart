@@ -5,8 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sum_cap/config/themes/colors.dart';
-import 'package:sum_cap/features/record_audio/presentation/cubit/audio_recorder_controller.dart';
-import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_record_cubit/audio_recoed_cubit.dart';
 
 class AudioWaveWidgte extends StatefulWidget {

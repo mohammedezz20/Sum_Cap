@@ -9,6 +9,8 @@ import 'package:sum_cap/features/app_layout/presentation/pages/app_layout.dart';
 import 'package:sum_cap/features/record_audio/data/datasources/audio_record_helper.dart';
 import 'package:sum_cap/features/record_audio/domain/usecases/audio_usecase.dart';
 import 'package:sum_cap/features/record_audio/presentation/pages/record_details.dart';
+import 'package:sum_cap/features/record_audio/presentation/widgets/translate_text.dart';
+import 'package:translator/translator.dart';
 
 import '../../../../dependcy_injection.dart';
 import '../../../app_layout/data/models/audio_model.dart';
@@ -75,5 +77,58 @@ class AudioCubit extends Cubit<AudioState> {
       updateAudio(newAudio, context);
       Navigator.pop(context);
     }
+  }
+
+  translateText(String transcriptionText, context) async {
+    emit(TranslateAudioLoadingState());
+    var response = await _usecase.translateText(transcriptionText);
+    response.fold((l) {
+      emit(TranslateAudioErrorState(l.toString()));
+    }, (r) {
+      emit(TranslateAudioSuccessState(r));
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return DialogWidget(r, isTranslated: true);
+        },
+      );
+    });
+
+    //   try {
+    //     final translator = GoogleTranslator();
+    //     String text = '';
+    //     translator
+    //         .translate(transcriptionText, from: 'en', to: 'ar')
+    //         .then((value) {
+    //       text = value.text;
+    //       log(text);
+    //       showDialog(
+    //         context: context,
+    //         builder: (BuildContext context) {
+    //           return TranslateDialogWidget(value.text);
+    //         },
+    //       );
+    //       emit(TranslateAudioSuccessState(text));
+    //     });
+    //   } catch (e) {
+    //     emit(TranslateAudioErrorState(e.toString()));
+    //   }
+    // }
+  }
+
+  summarizeText(String transcriptionText, context) async {
+    emit(SummarizeAudioLoadingState());
+    var response = await _usecase.summarizeText(transcriptionText);
+    response.fold((l) {
+      emit(SummarizeAudioErrorState(l.toString()));
+    }, (r) {
+      emit(SummarizeAudioSuccessState(r));
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return DialogWidget(r);
+        },
+      );
+    });
   }
 }

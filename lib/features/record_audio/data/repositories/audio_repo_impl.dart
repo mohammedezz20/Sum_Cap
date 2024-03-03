@@ -29,4 +29,24 @@ class AudioRepoImpl extends AudioRepo {
       return Left(SystemFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> summarizeText(String text) async {
+    try {
+      var response = await _api.summarizeText(text);
+      return Right(response);
+    } catch (e) {
+      return Left(SystemFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> translateText(String text) async {
+    try {
+      var response = await _api.translateText(text);
+      return Right(response);
+    } catch (e) {
+      return Left(SystemFailure(message: e.toString()));
+    }
+  }
 }

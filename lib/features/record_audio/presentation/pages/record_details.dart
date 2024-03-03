@@ -19,6 +19,8 @@ import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dar
 import 'package:sum_cap/features/record_audio/presentation/widgets/option_file_widget.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/play_audio_file.dart'
     as play_audio_file;
+import 'package:sum_cap/features/record_audio/presentation/widgets/translate_text.dart';
+import 'package:translator/translator.dart';
 
 class RecordDetails extends StatefulWidget {
   AudioModel audio;
@@ -216,20 +218,40 @@ class _RecordDetailsState extends State<RecordDetails> {
                             width: 65.w,
                             height: 36.h,
                           ),
-                          OptionButton(
-                            buttonText: 'Summary',
-                            icon: FontAwesomeIcons.wandMagicSparkles,
-                            onTap: () {},
-                            width: 93.w,
-                            height: 36.h,
-                          ),
-                          OptionButton(
-                            buttonText: 'Translate',
-                            icon: FontAwesomeIcons.language,
-                            onTap: () {},
-                            width: 87.w,
-                            height: 36.h,
-                          ),
+                          (state is SummarizeAudioLoadingState)
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColor.primaryColor,
+                                  ),
+                                )
+                              : OptionButton(
+                                  buttonText: 'Summary',
+                                  icon: FontAwesomeIcons.wandMagicSparkles,
+                                  onTap: () {
+                                    cubit.summarizeText(
+                                        widget.audio.transcriptionText,
+                                        context);
+                                  },
+                                  width: 93.w,
+                                  height: 36.h,
+                                ),
+                          (state is TranslateAudioLoadingState)
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColor.primaryColor,
+                                  ),
+                                )
+                              : OptionButton(
+                                  buttonText: 'Translate',
+                                  icon: FontAwesomeIcons.language,
+                                  onTap: () {
+                                    cubit.translateText(
+                                        widget.audio.transcriptionText,
+                                        context);
+                                  },
+                                  width: 87.w,
+                                  height: 36.h,
+                                ),
                           OptionButton(
                             buttonText: 'Copy',
                             icon: FontAwesomeIcons.copy,

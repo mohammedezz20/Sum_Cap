@@ -8,4 +8,6 @@ import '../../../app_layout/data/models/audio_model.dart';
 abstract class AudioRepo {
   Future<Either<Failure, http.Response>> deleteAudio(String id);
   Future<Either<Failure, http.Response>> updateAudio(AudioModel audioModel);
+  Future<Either<Failure, String>> translateText(String text);
+  Future<Either<Failure, String>> summarizeText(String text);
 }
