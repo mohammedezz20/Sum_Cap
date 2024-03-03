@@ -3,7 +3,6 @@ import 'package:sum_cap/features/app_layout/data/datasources/app_layout_remote_d
 import 'package:sum_cap/features/app_layout/data/repositories/app_layout_repo_impl.dart';
 import 'package:sum_cap/features/app_layout/domain/usecases/app_layout_use_case.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
-import 'package:sum_cap/features/app_layout/presentation/pages/app_layout.dart';
 import 'package:sum_cap/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:sum_cap/features/auth/data/repositories/auth_repo_impl.dart';
 import 'package:sum_cap/features/auth/domain/repositories/auth_repo.dart';
@@ -12,6 +11,11 @@ import 'package:sum_cap/features/record_audio/data/datasources/audio_remote_data
 import 'package:sum_cap/features/record_audio/data/repositories/audio_repo_impl.dart';
 import 'package:sum_cap/features/record_audio/domain/repositories/audio_repo.dart';
 import 'package:sum_cap/features/record_audio/domain/usecases/audio_usecase.dart';
+import 'package:sum_cap/features/user_profile/data/datasources/user_remote_data_source.dart';
+import 'package:sum_cap/features/user_profile/data/repositories/user_repo_impl.dart';
+import 'package:sum_cap/features/user_profile/domain/repositories/user_repo.dart';
+import 'package:sum_cap/features/user_profile/domain/usecases/user_usecases.dart';
+import 'package:sum_cap/features/user_profile/presentation/cubit/user_profile_cubit.dart';
 
 import 'features/app_layout/domain/repositories/app_layout_repo.dart';
 import 'features/auth/domain/usecases/auth_use_case.dart';
@@ -50,4 +54,15 @@ Future<void> init() async {
   //datasource
   sl.registerLazySingleton<AudioRemoteDataSource>(
       () => AudioRemoteDataSourceImpl());
+
+  //! User profile
+  //cubit
+  sl.registerFactory(() => UserProfileCubit());
+  //UseCase
+  sl.registerLazySingleton(() => UserUseCase());
+  // Repository
+  sl.registerLazySingleton<UserRepository>(() => UserRepoImpl());
+  // DataSource
+  sl.registerLazySingleton<UserRemoteDataSource>(
+      () => UserRemoteDataSourceImpl());
 }

@@ -29,9 +29,9 @@ class ResetPasswordScreen extends StatelessWidget {
               message: 'Password reset successfully',
               title: '',
               contentType: ContentType.success);
-          context.jumpToAndRemove(const LoginScreen());
           cubit.passwordController.clear();
           cubit.confirmPasswordController.clear();
+          context.jumpToAndRemove(const LoginScreen());
         } else if (state is AuthResetPasswordFailerState) {
           context.showAwesomeSnackbar(
               message: state.message,

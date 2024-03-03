@@ -2,10 +2,11 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
-import 'package:sum_cap/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:sum_cap/config/themes/colors.dart';
+import 'package:sum_cap/core/cach_helper.dart';
+import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/core/widgets/custom_form_field.dart';
+import 'package:sum_cap/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:sum_cap/features/auth/presentation/pages/login_screen.dart';
 
 import '../../../app_layout/presentation/pages/app_layout.dart';
@@ -154,6 +155,18 @@ class RegisterScreen extends StatelessWidget {
                                       cubit.usernameController.clear();
                                       cubit.emailController.clear();
                                       cubit.passwordController.clear();
+                                      CachHelper.saveData(
+                                          key: 'token',
+                                          value: '${state.user.token}');
+                                      CachHelper.saveData(
+                                          key: 'username',
+                                          value: state.user.username);
+                                      CachHelper.saveData(
+                                          key: 'email',
+                                          value: state.user.email);
+                                      CachHelper.saveData(
+                                          key: 'password',
+                                          value: state.user.password);
                                     }
                                   }
                                 },

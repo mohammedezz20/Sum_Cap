@@ -48,6 +48,7 @@ class AuthRegisterSuccessState extends AuthState {
 
   AuthRegisterSuccessState(this.user) {
     GlobalVar.user = user;
+    user.saveToCashe();
   }
 
   @override
