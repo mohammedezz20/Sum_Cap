@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/assets_manager.dart';
-import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/audio_player.dart';
 
@@ -20,7 +19,7 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
     super.initState();
     cubit = AudioCubit.get(context);
 
-    cubit.nameController.text = 'New Recording';
+    cubit.usernameController.text = 'New Recording';
   }
 
   @override
@@ -55,7 +54,7 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
                     onTapOutside: (_) {
                       FocusScope.of(context).unfocus();
                     },
-                    controller: cubit.nameController,
+                    controller: cubit.usernameController,
                     decoration: const InputDecoration(
                       hintText: 'New Recording',
                       border: OutlineInputBorder(),

@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:path/path.dart';
-import 'package:sum_cap/core/global.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:sum_cap/core/utils/api_constants.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart';
+import 'package:sum_cap/core/utils/api_constants.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 
 import '../../../../core/cach_helper.dart';
@@ -38,7 +38,7 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
     final request = http.MultipartRequest(
       "POST",
       Uri.parse(
-          "${ApiModelConstatnts.apiUrl}${ApiModelConstatnts.transcribttion}"),
+          "${ApiModelConstants.apiUrl}${ApiModelConstants.transcription}"),
     );
 
     request.files.add(http.MultipartFile.fromBytes(
