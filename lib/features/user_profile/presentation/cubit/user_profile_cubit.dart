@@ -52,7 +52,8 @@ class UserProfileCubit extends Cubit<UserProfileState> {
         UserModel user = UserModel.fromJson(r['data']['user']);
         log(user.username);
         CachHelper.saveData(key: 'username', value: user.username);
-        emit(UserDeleteUserSuccessState(user.username));
+        usernameController.text = user.username;
+        emit(UserEditUserSuccessState(user.username));
       }
     });
   }
@@ -61,8 +62,8 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     emit(UserLoadingState());
     var response = await _repo.deleteUser(accessToken);
     if (response.statusCode == 204) {
-      emit(UserDeleteUserSuccessState('User deleted successfully'));
       logout();
+      emit(UserDeleteUserSuccessState('User deleted successfully'));
     } else {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
       emit(UserDeleteUserFailureState(responseData['message']));
@@ -88,6 +89,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     CachHelper.saveData(key: 'password', value: '');
     CachHelper.saveData(key: 'username', value: '');
     CachHelper.saveData(key: 'isLogin', value: false);
+
     emit(const UserLogoutState());
   }
 }

@@ -38,7 +38,7 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
     final request = http.MultipartRequest(
       "POST",
       Uri.parse(
-          "${ApiModelConstants.apiUrl}${ApiModelConstants.transcription}"),
+          "${ApiModelConstatnts.apiUrl}${ApiModelConstatnts.transcribttion}"),
     );
 
     request.files.add(http.MultipartFile.fromBytes(

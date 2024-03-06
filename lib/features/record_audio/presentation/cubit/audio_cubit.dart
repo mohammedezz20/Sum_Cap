@@ -73,7 +73,7 @@ class AudioCubit extends Cubit<AudioState> {
 
   translateText(String transcriptionText, context) async {
     emit(TranslateAudioLoadingState());
-    var response = await _usecase.translateText(transcriptionText);
+    var response = await _useCase.translateText(transcriptionText);
     response.fold((l) {
       emit(TranslateAudioErrorState(l.toString()));
     }, (r) {
@@ -110,7 +110,7 @@ class AudioCubit extends Cubit<AudioState> {
 
   summarizeText(String transcriptionText, context) async {
     emit(SummarizeAudioLoadingState());
-    var response = await _usecase.summarizeText(transcriptionText);
+    var response = await _useCase.summarizeText(transcriptionText);
     response.fold((l) {
       emit(SummarizeAudioErrorState(l.toString()));
     }, (r) {

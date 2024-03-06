@@ -19,7 +19,7 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
     super.initState();
     cubit = AudioCubit.get(context);
 
-    cubit.usernameController.text = 'New Recording';
+    cubit.nameController.text = 'New Recording';
   }
 
   @override
@@ -54,7 +54,7 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
                     onTapOutside: (_) {
                       FocusScope.of(context).unfocus();
                     },
-                    controller: cubit.usernameController,
+                    controller: cubit.nameController,
                     decoration: const InputDecoration(
                       hintText: 'New Recording',
                       border: OutlineInputBorder(),
