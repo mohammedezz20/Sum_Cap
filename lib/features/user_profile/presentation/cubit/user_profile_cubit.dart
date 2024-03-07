@@ -89,7 +89,6 @@ class UserProfileCubit extends Cubit<UserProfileState> {
     CachHelper.saveData(key: 'password', value: '');
     CachHelper.saveData(key: 'username', value: '');
     CachHelper.saveData(key: 'isLogin', value: false);
-
     emit(const UserLogoutState());
   }
 }

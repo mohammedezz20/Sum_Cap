@@ -48,7 +48,7 @@ class LoginScreen extends StatelessWidget {
                         width: double.infinity,
                         height: context.h(55),
                         child: CustomFormField(
-                          controller: cubit.emailController,
+                          controller: cubit.loginUsernameController,
                           labelText: 'Username',
                         ),
                       ),
@@ -59,7 +59,7 @@ class LoginScreen extends StatelessWidget {
                         width: double.infinity,
                         height: context.h(55),
                         child: CustomFormField(
-                          controller: cubit.passwordController,
+                          controller: cubit.loginPasswordController,
                           isPassword: cubit.isPassword,
                           keyboardType: TextInputType.number,
                           labelText: 'Password',
@@ -100,15 +100,18 @@ class LoginScreen extends StatelessWidget {
                           : CupertinoButton(
                               padding: EdgeInsets.zero,
                               onPressed: () {
-                                if (cubit.emailController.text.isNotEmpty &&
-                                    cubit.passwordController.text.isNotEmpty) {
+                                if (cubit.loginUsernameController.text
+                                        .isNotEmpty &&
+                                    cubit.loginPasswordController.text
+                                        .isNotEmpty) {
                                   AuthCubit.get(context).login(
-                                    email: cubit.emailController.text,
-                                    password: cubit.passwordController.text,
+                                    email: cubit.loginUsernameController.text,
+                                    password:
+                                        cubit.loginPasswordController.text,
                                   );
                                   if (state is AuthLoginSuccessState) {
-                                    cubit.emailController.clear();
-                                    cubit.passwordController.clear();
+                                    cubit.loginUsernameController.clear();
+                                    cubit.loginPasswordController.clear();
                                   }
                                 } else {
                                   context.showAwesomeSnackbar(
