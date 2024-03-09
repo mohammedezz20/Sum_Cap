@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +20,9 @@ class AuthCubit extends Cubit<AuthState> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
+  TextEditingController loginUsernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController loginPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   bool isPassword = true;
   IconData icon = Icons.visibility_outlined;

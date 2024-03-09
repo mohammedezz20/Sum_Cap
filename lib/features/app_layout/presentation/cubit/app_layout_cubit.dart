@@ -122,38 +122,40 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
   //!Upload File
   Future<void> uploadFile({required AudioModel audioModel}) async {
     emit(UploadAudioLoadingState(
-      fileName: audioModel.title,
+      fileName: audioModel.audioName,
     ));
     var response = await _usecases.uploadAudios(audioModel: audioModel);
     response.fold((l) {
       log(l.toString());
       emit(UploadAudioErrorState(
-          error: 'Error When Uploading', fileName: audioModel.title));
+          error: 'Error When Uploading', fileName: audioModel.audioName));
     }, (r) {
       log(r.toString());
       emit(UploadAudioSuccessState(
-          message: 'Uploaded Successfully', fileName: audioModel.title));
+          message: 'Uploaded Successfully', fileName: audioModel.audioName));
     });
   }
 
-  // Future<String> uploadAudio(
-  //     {required String filePath,
-  //     required String transcription,
-  //     required String title}) async {
+  // Future<String> uploadAudio({required AudioModel audioModel}) async {
   //   var request = http.MultipartRequest(
   //       'POST', Uri.parse('https://sumcap101-uqk5.onrender.com/api/v1/audios'));
-  //   request.fields.addAll({'title': title, 'transcriptionText': transcription});
-  //   request.files.add(await http.MultipartFile.fromPath('audio', filePath,
-  //       filename: basename(filePath)));
+  //   request.fields.addAll({
+  //     'title': audioModel.title,
+  //     'transcriptionText': audioModel.transcriptionText,
+  //     'duration': audioModel.duration
+  //   });
+  //   request.files.add(await http.MultipartFile.fromPath(
+  //       'audio', audioModel.audio,
+  //       filename: basename(audioModel.audio)));
   //   request.headers['Authorization'] = 'Bearer ${GlobalVar.user?.token}';
-  //   log("---------------");
+
   //   http.StreamedResponse response = await request.send();
-  //   log("---------------");
+
   //   var responseData = await response.stream.bytesToString();
 
   //   log("error in uploading audio$responseData");
   //   return responseData;
-  // }+
+  // }
 
   getdata() {
     GlobalVar.user?.token != CachHelper.getData(key: 'token');

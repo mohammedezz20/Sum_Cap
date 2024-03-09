@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,8 @@ import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_states.dart';
+import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
+
 import 'package:sum_cap/features/record_audio/presentation/pages/record_details.dart';
 
 class FileWidget extends StatelessWidget {
@@ -27,27 +30,27 @@ class FileWidget extends StatelessWidget {
     return BlocConsumer<AppLayoutCubit, AppLayoutStates>(
       listener: (context, state) {
         if (state is TranscriptionLoadingState) {
-          if (state.fileName == audio.title) {
+          if (state.fileName == audio.audioName) {
             audio.status = FileStatus.trancripting;
           }
         } else if (state is TranscriptionErrorState) {
-          if (state.fileName == audio.title) {
+          if (state.fileName == audio.audioName) {
             audio.status = FileStatus.error;
           }
         } else if (state is UploadAudioLoadingState) {
-          if (state.fileName == audio.title) {
+          if (state.fileName == audio.audioName) {
             audio.status = FileStatus.uploading;
           }
         } else if (state is UploadAudioErrorState) {
-          if (state.fileName == audio.title) {
+          if (state.fileName == audio.audioName) {
             audio.status = FileStatus.error;
           }
         } else if (state is UploadAudioSuccessState) {
-          if (state.fileName == audio.title) {
+          if (state.fileName == audio.audioName) {
             audio.status = FileStatus.done;
           }
         } else if (state is TranscriptionSuccessState) {
-          if (state.fileName == audio.title) {
+          if (state.fileName == audio.audioName) {
             audio.status = FileStatus.done;
           }
         }
@@ -55,10 +58,15 @@ class FileWidget extends StatelessWidget {
       builder: (context, state) {
         return CupertinoButton(
           padding: EdgeInsets.zero,
-          onPressed: () {
+          onPressed: () async {
             if (audio.status == FileStatus.done) {
+              AudioCubit.get(context).tempModel = audio;
+              AudioCubit.get(context).nameController.text = audio.title;
+              AudioCubit.get(context).transcriptionController.text =
+                  audio.transcriptionText;
+
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return RecordDetails(audio: audio);
+                return RecordDetails(audio);
               }));
             }
           },
@@ -95,7 +103,7 @@ class FileWidget extends StatelessWidget {
                             Text(
                               DateFormat('hh:mm a').format(dateTime
                                   .toUtc()
-                                  .add(const Duration(hours: 2))),
+                                  .add(const Duration(hours: -2))),
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall!
@@ -136,6 +144,14 @@ class FileWidget extends StatelessWidget {
                               ],
                             ),
                             90.w.sizedBoxWidth,
+                            if (audio.status == FileStatus.removing) ...[
+                              const Icon(
+                                FontAwesomeIcons.trash,
+                                color: AppColor.redColor,
+                                size: 14,
+                              ),
+                              5.w.sizedBoxWidth,
+                            ],
                             if (audio.status == FileStatus.trancripting) ...[
                               const Icon(
                                 FontAwesomeIcons.closedCaptioning,
@@ -147,7 +163,7 @@ class FileWidget extends StatelessWidget {
                             if (audio.status == FileStatus.uploading) ...[
                               const Icon(
                                 FontAwesomeIcons.cloudArrowUp,
-                                color: AppColor.redColor,
+                                color: AppColor.primaryColor,
                                 size: 14,
                               ),
                               5.w.sizedBoxWidth,

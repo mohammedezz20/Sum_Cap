@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:path/path.dart';
-import 'package:sum_cap/core/global.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:sum_cap/core/utils/api_constants.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart';
+import 'package:sum_cap/core/utils/api_constants.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 
 import '../../../../core/cach_helper.dart';
@@ -22,7 +22,7 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
     final token = CachHelper.getData(key: 'token');
 
     final response = await http.get(
-      Uri.parse(APIConstants.baseUrl + APIConstants.getUserAudio),
+      Uri.parse(APIConstants.baseUrl + APIConstants.audio),
       headers: {'Authorization': 'Bearer $token'},
     );
     final Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -37,7 +37,8 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
 
     final request = http.MultipartRequest(
       "POST",
-      Uri.parse("http://192.168.1.5:8000/api/v1/transcribe"),
+      Uri.parse(
+          "${ApiModelConstatnts.apiUrl}${ApiModelConstatnts.transcribttion}"),
     );
 
     request.files.add(http.MultipartFile.fromBytes(
@@ -56,6 +57,28 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
   }
 
   @override
+//   Future<String> uploadAudio({required AudioModel audioModel}) async {
+//     final client = http.Client();
+//     var request = http.MultipartRequest(
+//         'POST', Uri.parse('${APIConstants.baseUrl}${APIConstants.audio}'));
+//     request.fields.addAll({
+//       'title': audioModel.title,
+//       'transcriptionText': audioModel.transcriptionText,
+//       'duration': audioModel.duration
+//     });
+//     request.files.add(await http.MultipartFile.fromPath(
+//         'audio', audioModel.audio,
+//         filename: basename(audioModel.audio)));
+//     request.headers['Authorization'] =
+//         'Bearer ${CachHelper.getData(key: 'token')}';
+//     log("---------------");
+//  var response = await client.send(request);
+//     log("---------------");
+//     var responseData = response.stream.toString();
+//     log("error in uploading audio$responseData");
+//     return responseData;
+//   }
+
   Future<String> uploadAudio({required AudioModel audioModel}) async {
     var request = http.MultipartRequest(
         'POST', Uri.parse('https://sumcap101-uqk5.onrender.com/api/v1/audios'));
@@ -69,11 +92,11 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
         filename: basename(audioModel.audio)));
     request.headers['Authorization'] =
         'Bearer ${CachHelper.getData(key: 'token')}';
-    log("---------------");
+
     http.StreamedResponse response = await request.send();
-    log("---------------");
-    var responseData = response.stream.toString();
-    log("error in uploading audio$responseData");
+
+    var responseData = await response.stream.bytesToString();
+
     return responseData;
   }
 }

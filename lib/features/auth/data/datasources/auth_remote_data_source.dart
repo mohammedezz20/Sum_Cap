@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:ffi';
 
-import 'package:sum_cap/core/utils/api_constants.dart';
-
-import '../models/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:sum_cap/core/utils/api_constants.dart';
 
 abstract class AuthRemoteDataSource {
   Future<Map<String, dynamic>> login(String email, String password);

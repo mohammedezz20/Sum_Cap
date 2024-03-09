@@ -1,0 +1,1 @@
+ /Users/ezz/Flutter\ project\ /Graduation\ Project/sum_cap/.dart_tool/flutter_build/6ebd78caa3b3e80f4bc1aac42b6805ee/native_assets.yaml: 

@@ -1,62 +1,192 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_audio_waveforms/flutter_audio_waveforms.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:record/record.dart';
 import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
+import 'package:sum_cap/core/widgets/custom_button.dart';
+import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
+import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
+import 'package:sum_cap/features/record_audio/presentation/cubit/audio_record_cubit/audio_recoed_cubit.dart';
 
-class AudioPlayerWidget extends StatelessWidget {
-  AudioPlayerWidget({super.key});
+import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
+
+import 'package:sum_cap/features/record_audio/presentation/widgets/audio_wave_widget.dart';
+
+import '../../../../core/utils/enums.dart';
+
+class AudioPlayerView extends StatelessWidget {
+  const AudioPlayerView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      height: 156.h,
-      color: AppColor.whiteColor,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          PolygonWaveform(
-            maxDuration: const Duration(seconds: 100),
-            elapsedDuration: const Duration(seconds: 100),
-            height: 300,
-            width: MediaQuery.of(context).size.width,
-            samples: [],
-          ),
-          10.h.sizedBoxHeight,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                height: 50.h,
-                width: 50.w,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColor.redColor,
+    return const AudioPlayerWidget();
+  }
+}
+
+class AudioPlayerWidget extends StatelessWidget {
+  const AudioPlayerWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    AudioRecoedCubit audioRecorderController = AudioRecoedCubit.get(context);
+
+    final cubit = AppLayoutCubit.get(context);
+    final audioCubit = AudioCubit.get(context);
+    return StreamBuilder<Object>(
+        stream: audioRecorderController.recordStateStream,
+        builder: (context, snapshot) {
+          return Container(
+            alignment: Alignment.center,
+            height: 180.h,
+            color: AppColor.whiteColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const AudioWaveWidgte(),
+                5.h.sizedBoxHeight,
+                const _timer(),
+                5.h.sizedBoxHeight,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomButton(
+                      widget: Text('Discard Audio',
+                          style: TextStyle(
+                            color: AppColor.redColor,
+                            fontSize: 15.sp,
+                          )),
+                      height: 40.h,
+                      width: 100.w,
+                      colorBorder: AppColor.redColor,
+                      onTap: () async {
+                        final String? path =
+                            await audioRecorderController.stop();
+
+                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        //?????????????????????????????????????????????????????????????????????
+
+                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        //?????????????????????????????????????????????????????????????????????
+
+                        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        //?????????????????????????????????????????????????????????????????????
+//ToDo: Don't forget delete audio file from devise
+                        // audioRecorderController.delete(path!);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                    ),
+                    CupertinoButton(
+                      onPressed: () {
+                        if (snapshot.data == RecordState.record) {
+                          audioRecorderController.pause();
+                        } else if (snapshot.data == RecordState.pause) {
+                          audioRecorderController.resume();
+                        } else {
+                          audioRecorderController.start();
+                        }
+                      },
+                      padding: EdgeInsets.zero,
+                      child: Container(
+                        height: 55.h,
+                        width: 55.w,
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColor.primaryColor,
+                        ),
+                        child: Icon(
+                          (snapshot.data == RecordState.record)
+                              ? FontAwesomeIcons.pause
+                              : FontAwesomeIcons.play,
+                          color: const Color(0xffD9D9D9),
+                        ),
+                      ),
+                    ),
+                    CustomButton(
+                      widget: Text('Add Audio',
+                          style: TextStyle(
+                            color: AppColor.primaryColor,
+                            fontSize: 15.sp,
+                          )),
+                      height: 40.h,
+                      width: 100.w,
+                      onTap: () async {
+                        final int durationInSeconds =
+                            audioRecorderController.recordDuration;
+                        final String? path =
+                            await audioRecorderController.stop();
+
+                        final int minutes = durationInSeconds ~/ 60;
+                        final int seconds = durationInSeconds % 60;
+
+                        AudioModel audioModel = AudioModel(
+                            audio: path!,
+                            title: audioCubit.nameController.text,
+                            transcriptionText: '',
+                            createdAt: DateTime.now(),
+                            duration:
+                                '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                            audioName: audioCubit.nameController.text +
+                                DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
+                            status: FileStatus.trancripting);
+                        cubit.audios.add(audioModel);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+
+                        await cubit
+                            .transcripeFile(path, audioModel.audioName)
+                            .whenComplete(() {
+                          audioModel.transcriptionText =
+                              cubit.transcriptionText!;
+                          cubit
+                              .uploadFile(audioModel: audioModel)
+                              .whenComplete(() {
+                            // audioRecorderController.delete(audioModel.audio);
+                          });
+                          audioCubit.nameController.clear();
+                          cubit.filePath = '';
+                          cubit.transcriptionText = '';
+                          cubit.audioDuration = '';
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                child: const Icon(
-                  Icons.stop_rounded,
-                  color: Color(0xffD9D9D9),
-                  size: 32,
-                ),
-              ),
-              Container(
-                height: 50.h,
-                width: 50.w,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColor.primaryColor,
-                ),
-                child: const Icon(
-                  Icons.play_arrow_rounded,
-                  color: Color(0xffD9D9D9),
-                  size: 32,
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+              ],
+            ),
+          );
+        });
+  }
+}
+
+class _timer extends StatelessWidget {
+  const _timer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.all(10.h),
+        child: StreamBuilder(
+          stream: AudioRecoedCubit.get(context).durationStreamOutput,
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            final int durationInSeconds = snapshot.data ?? 0;
+            final int minutes = durationInSeconds ~/ 60;
+            final int seconds = durationInSeconds % 60;
+
+            return Text(
+                '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
+                style: const TextStyle(
+                  color: AppColor.blackColor,
+                  fontSize: 20,
+                ));
+          },
+        ));
   }
 }
