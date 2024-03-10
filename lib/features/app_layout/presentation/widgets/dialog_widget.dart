@@ -73,14 +73,15 @@ class CustomDialogWidget extends StatelessWidget {
                 onTap: () async {
                   if (key.currentState?.validate() == true) {
                     AudioModel audioModel = AudioModel(
-                        audio: cubit.filePath!,
-                        title: namecontroller.text,
-                        transcriptionText: '',
-                        createdAt: DateTime.now(),
+                      audioUrl: cubit.filePath!,
+                      title: namecontroller.text,
+                      transcriptionText: '',
+                      createdAt: DateTime.now(),
                         duration: cubit.audioDuration!,
                         audioName: namecontroller.text +
                             DateTime.now().millisecondsSinceEpoch.toString(),
-                        status: FileStatus.trancripting);
+                      status: FileStatus.trancripting,
+                    );
                     cubit.audios.add(audioModel);
                     Navigator.pop(context);
                     Navigator.pop(context);

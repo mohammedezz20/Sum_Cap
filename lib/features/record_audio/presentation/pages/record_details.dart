@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,12 +13,9 @@ import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
-
 import 'package:sum_cap/features/record_audio/presentation/widgets/option_file_widget.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/play_audio_file.dart'
     as play_audio_file;
-import 'package:sum_cap/features/record_audio/presentation/widgets/translate_text.dart';
-import 'package:translator/translator.dart';
 
 class RecordDetails extends StatefulWidget {
   AudioModel audio;

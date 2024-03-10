@@ -28,7 +28,7 @@ class AudioRemoteDataSourceImpl extends AudioRemoteDataSource {
   @override
   Future<http.Response> updateAudio(AudioModel audioModel) async {
     const baseUrl = '${APIConstants.baseUrl}${APIConstants.editAudio}';
-    final url = Uri.parse('$baseUrl${audioModel.id}');
+    final url = Uri.parse('$baseUrl${audioModel.audioId}');
     log(audioModel.title);
     final requestBody = jsonEncode({
       'transcriptionText': audioModel.transcriptionText,

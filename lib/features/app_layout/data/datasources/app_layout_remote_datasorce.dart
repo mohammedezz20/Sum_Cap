@@ -88,8 +88,8 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
       'duration': audioModel.duration
     });
     request.files.add(await http.MultipartFile.fromPath(
-        'audio', audioModel.audio,
-        filename: basename(audioModel.audio)));
+        'audio', audioModel.audioUrl,
+        filename: basename(audioModel.audioUrl)));
     request.headers['Authorization'] =
         'Bearer ${CachHelper.getData(key: 'token')}';
 

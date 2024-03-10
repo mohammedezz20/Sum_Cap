@@ -1,19 +1,14 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:record/record.dart';
 import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/core/widgets/custom_button.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
-import 'package:sum_cap/features/record_audio/presentation/cubit/audio_record_cubit/audio_recoed_cubit.dart';
-
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
-
+import 'package:sum_cap/features/record_audio/presentation/cubit/audio_record_cubit/audio_recoed_cubit.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/audio_wave_widget.dart';
 
 import '../../../../core/utils/enums.dart';
@@ -125,7 +120,7 @@ class AudioPlayerWidget extends StatelessWidget {
                         final int seconds = durationInSeconds % 60;
 
                         AudioModel audioModel = AudioModel(
-                            audio: path!,
+                            audioUrl: path!,
                             title: audioCubit.nameController.text,
                             transcriptionText: '',
                             createdAt: DateTime.now(),

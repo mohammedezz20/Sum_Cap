@@ -4,13 +4,12 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/record_audio/domain/usecases/audio_usecase.dart';
 import 'package:sum_cap/features/record_audio/presentation/pages/record_details.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/translate_text.dart';
-import 'package:translator/translator.dart';
 
 import '../../../../dependcy_injection.dart';
-import '../../../app_layout/data/models/audio_model.dart';
 
 part 'audio_state.dart';
 
@@ -24,7 +23,7 @@ class AudioCubit extends Cubit<AudioState> {
   Future<void> deleteAudio(AudioModel audio, context) async {
     emit(DeleteAudioLoadingState(audio.title));
 
-    var result = await _useCase.deleteAudio(audio.id!);
+    var result = await _useCase.deleteAudio(audio.audioId!);
     result.fold((l) {
       emit(DeleteAudioErrorState(l.toString(), audio.title));
     }, (r) {
@@ -57,11 +56,11 @@ class AudioCubit extends Cubit<AudioState> {
       dataStatus = DataStatus.readOnly;
       log(nameController.text);
       AudioModel newAudio = AudioModel(
-        id: tempModel?.id,
+        audioId: tempModel?.audioId,
         title: nameController.text,
         transcriptionText: transcriptionController.text,
         createdAt: tempModel!.createdAt,
-        audio: tempModel!.audio,
+        audioUrl: tempModel!.audioUrl,
         duration: tempModel!.duration,
         audioName: tempModel!.audioName,
       );

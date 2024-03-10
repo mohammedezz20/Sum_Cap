@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,7 +11,6 @@ import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_states.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
-
 import 'package:sum_cap/features/record_audio/presentation/pages/record_details.dart';
 
 class FileWidget extends StatelessWidget {

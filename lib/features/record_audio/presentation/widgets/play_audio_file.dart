@@ -1,27 +1,20 @@
 import 'dart:developer';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart';
 import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/core/utils/extensions/string_extensions.dart';
+import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/app_layout/presentation/pages/app_layout.dart';
-import 'package:sum_cap/features/app_layout/presentation/pages/home_screen.dart';
-import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/media_player_button.dart';
-
-import '../../../app_layout/data/models/audio_model.dart';
 
 class AdvancedAudioPlayer extends StatefulWidget {
   final AudioModel audioModel;
-
   const AdvancedAudioPlayer({
     Key? key,
     required this.audioModel,
-    // requireadvancedPlayer,
   }) : super(key: key);
 
   @override
@@ -56,10 +49,10 @@ class _AdvancedAudioPlayerState extends State<AdvancedAudioPlayer>
 
     _duration = Duration(minutes: minutes, seconds: seconds);
 
-    if (widget.audioModel.audio.contains('http')) {
-      await advancedPlayer.setSourceUrl(widget.audioModel.audio);
+    if (widget.audioModel.audioUrl.contains('http')) {
+      await advancedPlayer.setSourceUrl(widget.audioModel.audioUrl);
     } else {
-      await advancedPlayer.setSourceDeviceFile(widget.audioModel.audio);
+      await advancedPlayer.setSourceDeviceFile(widget.audioModel.audioUrl);
     }
   }
 
@@ -86,10 +79,10 @@ class _AdvancedAudioPlayerState extends State<AdvancedAudioPlayer>
         audioState = AudioState.none;
       });
     });
-    if (widget.audioModel.audio.contains('http')) {
-      advancedPlayer.setSourceUrl(widget.audioModel.audio);
+    if (widget.audioModel.audioUrl.contains('http')) {
+      advancedPlayer.setSourceUrl(widget.audioModel.audioUrl);
     } else {
-      advancedPlayer.setSourceDeviceFile(widget.audioModel.audio);
+      advancedPlayer.setSourceDeviceFile(widget.audioModel.audioUrl);
     }
     super.initState();
   }
@@ -187,11 +180,12 @@ class _AdvancedAudioPlayerState extends State<AdvancedAudioPlayer>
                 onPressed: () {
                   log("old state:${audioState.name}");
                   if (audioState == AudioState.none) {
-                    if (widget.audioModel.audio.contains('http')) {
-                      advancedPlayer.play(UrlSource(widget.audioModel.audio));
+                    if (widget.audioModel.audioUrl.contains('http')) {
+                      advancedPlayer
+                          .play(UrlSource(widget.audioModel.audioUrl));
                     } else {
                       advancedPlayer
-                          .play(DeviceFileSource(widget.audioModel.audio));
+                          .play(DeviceFileSource(widget.audioModel.audioUrl));
                     }
 
                     setState(() {

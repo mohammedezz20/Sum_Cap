@@ -3,10 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
-import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 
 class ShimerFileWidget extends StatefulWidget {
   const ShimerFileWidget({
