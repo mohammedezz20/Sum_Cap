@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:sum_cap/core/utils/enums.dart';
 
 class AudioModel {
@@ -31,16 +34,20 @@ class AudioModel {
     return AudioModel(
       title: json['title'],
       transcriptionText: json['transcriptionText'],
-      createdAt: json['createdAt'],
+      createdAt: DateTime.parse(json['createdAt']),
       audioId: json['_id'],
       duration: json['duration'],
       audioUrl: json['audio'],
       owner: json['owner'],
       audioName: json['audioName'],
-      paragraphs: List<Paragraph>.from(
-          json['paragraphs']?.map((x) => Paragraph.fromJson(x)) ?? []),
-      topics:
-          List<Topic>.from(json['topics']?.map((x) => Topic.fromJson(x)) ?? []),
+      paragraphs: List<Paragraph>.from(json['paragraphs']?.map((x) {
+            return Paragraph.fromJson(x);
+          }) ??
+          []),
+      topics: List<Topic>.from(json['topics']?.map((x) {
+            return Topic.fromJson(x);
+          }) ??
+          []),
     );
   }
 
@@ -57,6 +64,33 @@ class AudioModel {
       'paragraphs': List<dynamic>.from(paragraphs!.map((x) => x.toJson())),
       'topics': List<dynamic>.from(topics!.map((x) => x.toJson())),
     };
+  }
+
+  @override
+  String toString() {
+    return 'AudioModel { title: $title, transcriptionText: $transcriptionText, '
+        'createdAt: $createdAt, audioId: $audioId, duration: $duration, '
+        'audioUrl: $audioUrl, owner: $owner, audioName: $audioName, '
+        'paragraphs: ${paragraphs.toString()}, topics: ${topics.toString()}, status: $status }';
+  }
+
+  factory AudioModel.fromJsonWithTranscript(Map<String, dynamic> json) {
+    String transcriptData = json['paragraphs']['transcript'];
+
+    return AudioModel(
+      title: json['title'] ?? '',
+      transcriptionText: transcriptData,
+      createdAt: DateTime.now(),
+      audioId: json['_id'] ?? '',
+      duration: json['duration'] ?? '',
+      audioUrl: json['audio'] ?? '',
+      owner: json['owner'] ?? '',
+      audioName: json['audioName'] ?? '',
+      paragraphs: List<Paragraph>.from(
+          json['topics']?.map((x) => Paragraph.fromJson(x)) ?? []),
+      topics:
+          List<Topic>.from(json['topics']?.map((x) => Topic.fromJson(x)) ?? []),
+    );
   }
 }
 
@@ -77,23 +111,28 @@ class Paragraph {
 
   factory Paragraph.fromJson(Map<String, dynamic> json) {
     return Paragraph(
-      paragraphId: json['_id'],
-      end: json['end'],
-      numWords: json['num_words'],
+      paragraphId: json['_id'] ?? '',
+      end: json['end'] ?? 0.0,
+      numWords: json['num_words'] ?? 0,
       sentences: List<Sentence>.from(
           json['sentences']?.map((x) => Sentence.fromJson(x)) ?? []),
-      start: json['start'],
+      start: json['start'] ?? 0.0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': paragraphId,
-      'end': end,
-      'num_words': numWords,
+      'end': end ?? 0.0,
+      'num_words': numWords ?? 0,
       'sentences': List<dynamic>.from(sentences.map((x) => x.toJson())),
-      'start': start,
+      'start': start ?? 0.0,
     };
+  }
+
+  @override
+  String toString() {
+    return 'Paragraph { paragraphId: $paragraphId, end: $end, numWords: $numWords, '
+        'sentences: $sentences, start: $start }';
   }
 }
 
@@ -112,10 +151,10 @@ class Sentence {
 
   factory Sentence.fromJson(Map<String, dynamic> json) {
     return Sentence(
-      sentenceId: json['_id'],
-      end: json['end'],
-      start: json['start'],
-      text: json['text'],
+      sentenceId: json['_id'] ?? '',
+      end: json['end'] ?? 0.0,
+      start: json['start'] ?? 0.0,
+      text: json['text'] ?? '',
     );
   }
 
@@ -126,6 +165,12 @@ class Sentence {
       'start': start,
       'text': text,
     };
+  }
+
+  @override
+  String toString() {
+    return 'Sentence { sentenceId: $sentenceId, end: $end, start: $start, '
+        'text: $text }';
   }
 }
 
@@ -146,9 +191,9 @@ class Topic {
 
   factory Topic.fromJson(Map<String, dynamic> json) {
     return Topic(
-      topicId: json['_id'],
-      endWord: json['end_word'],
-      startWord: json['start_word'],
+      topicId: json['_id'] ?? '',
+      endWord: json['end_word'] ?? 0,
+      startWord: json['start_word'] ?? 0,
       text: json['text'],
       topics: List<TopicDetail>.from(
           json['topics']?.map((x) => TopicDetail.fromJson(x)) ?? []),
@@ -164,12 +209,18 @@ class Topic {
       'topics': List<dynamic>.from(topics.map((x) => x.toJson())),
     };
   }
+
+  @override
+  String toString() {
+    return 'Topic { topicId: $topicId, endWord: $endWord, startWord: $startWord, '
+        'text: $text, topics: ${topics.toString()} }';
+  }
 }
 
 class TopicDetail {
-  String topicId;
-  double confidence;
-  String topic;
+  String? topicId;
+  double? confidence;
+  String? topic;
 
   TopicDetail({
     required this.topicId,
@@ -179,9 +230,9 @@ class TopicDetail {
 
   factory TopicDetail.fromJson(Map<String, dynamic> json) {
     return TopicDetail(
-      topicId: json['_id'],
-      confidence: json['confidence'],
-      topic: json['topic'],
+      topicId: json['_id'] ?? '',
+      confidence: json['confidence'] ?? 0.0,
+      topic: json['topic'] ?? '',
     );
   }
 
@@ -191,5 +242,10 @@ class TopicDetail {
       'confidence': confidence,
       'topic': topic,
     };
+  }
+
+  @override
+  String toString() {
+    return 'TopicDetail { topicId: $topicId, confidence: $confidence, topic: $topic }';
   }
 }

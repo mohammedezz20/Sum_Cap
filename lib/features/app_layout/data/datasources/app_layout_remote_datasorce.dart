@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart';
 import 'package:sum_cap/core/utils/api_constants.dart';
@@ -31,54 +32,81 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
 
   @override
   Future<Map<String, dynamic>> transcritpion({required String filePath}) async {
-    final client = http.Client();
+    const deepgramApiKey =
+        ApiModelConstatnts.deepGramApiKey; // Replace with your actual API key
+    const deepgramEndpoint = ApiModelConstatnts.deepGramBaseUrl;
+    const model = 'nova-2';
 
-    final file = File(filePath);
+    final client =
+        http.Client(); // Create the client outside the try-catch block
 
-    final request = http.MultipartRequest(
-      "POST",
-      Uri.parse(
-          "${ApiModelConstatnts.apiUrl}${ApiModelConstatnts.transcribttion}"),
-    );
+    try {
+      final file = File(filePath);
+      if (!await file.exists()) {
+        throw Exception('File not found: $filePath');
+      }
 
-    request.files.add(http.MultipartFile.fromBytes(
-      "file",
-      file.readAsBytesSync(),
-      filename: basename(filePath),
-      contentType: MediaType("application", "octet-stream"),
-    ));
+      final request = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'https://api.deepgram.com/v1/listen?detect_topics=true&smart_format=true&paragraphs=true&language=en&model=nova-2'));
+      request.headers['Authorization'] = 'Token $deepgramApiKey';
+      request.files.add(http.MultipartFile.fromBytes(
+          'file', file.readAsBytesSync(),
+          filename: basename(filePath),
+          contentType: MediaType("application", "octet-stream")));
+      request.fields['model'] = model;
 
-    final response = await client.send(request);
-    log(response.statusCode.toString());
+      request.fields['smart_format'] = true.toString();
+      request.fields['detect_topics'] = true.toString();
+      request.fields['paragraphs'] = true.toString();
 
-    final responseBody = await response.stream.bytesToString();
+      final response = await client.send(request);
 
-    return jsonDecode(responseBody);
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+
+        final result = jsonDecode(responseBody);
+
+        return result['results']['channels'][0]['alternatives']
+            [0]; // Return parsed map if valid
+      } else {
+        throw Exception('Error: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception(
+          'Error during transcription: $error'); // Catch general errors
+    } finally {
+      client.close(); // Close the client even if an error occurs
+    }
   }
+  // Future<Map<String, dynamic>> transcritpion({required String filePath}) async {
+  //   final client = http.Client();
+
+  //   final file = File(filePath);
+
+  //   final request = http.MultipartRequest(
+  //     "POST",
+  //     Uri.parse(
+  //         "${ApiModelConstatnts.apiUrl}${ApiModelConstatnts.transcribttion}"),
+  //   );
+
+  //   request.files.add(http.MultipartFile.fromBytes(
+  //     "file",
+  //     file.readAsBytesSync(),
+  //     filename: basename(filePath),
+  //     contentType: MediaType("application", "octet-stream"),
+  //   ));
+
+  //   final response = await client.send(request);
+  //   log(response.statusCode.toString());
+
+  //   final responseBody = await response.stream.bytesToString();
+
+  //   return jsonDecode(responseBody);
+  // }
 
   @override
-//   Future<String> uploadAudio({required AudioModel audioModel}) async {
-//     final client = http.Client();
-//     var request = http.MultipartRequest(
-//         'POST', Uri.parse('${APIConstants.baseUrl}${APIConstants.audio}'));
-//     request.fields.addAll({
-//       'title': audioModel.title,
-//       'transcriptionText': audioModel.transcriptionText,
-//       'duration': audioModel.duration
-//     });
-//     request.files.add(await http.MultipartFile.fromPath(
-//         'audio', audioModel.audio,
-//         filename: basename(audioModel.audio)));
-//     request.headers['Authorization'] =
-//         'Bearer ${CachHelper.getData(key: 'token')}';
-//     log("---------------");
-//  var response = await client.send(request);
-//     log("---------------");
-//     var responseData = response.stream.toString();
-//     log("error in uploading audio$responseData");
-//     return responseData;
-//   }
-
   Future<String> uploadAudio({required AudioModel audioModel}) async {
     var request = http.MultipartRequest(
         'POST', Uri.parse('https://sumcap101-uqk5.onrender.com/api/v1/audios'));

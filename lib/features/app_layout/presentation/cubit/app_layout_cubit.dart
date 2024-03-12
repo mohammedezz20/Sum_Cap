@@ -99,6 +99,9 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
 
   //!Transcripe File
   String? transcriptionText;
+  Map<String, dynamic>? data;
+  List<Topic> topics = [];
+  List<Paragraph> paragraphs = [];
   Future<void> transcripeFile(filePath, title) async {
     emit(TranscriptionLoadingState(
       fileName: title,
@@ -109,8 +112,21 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
       emit(TranscriptionErrorState(
           fileName: title, error: 'Error When Transcripting'));
     }, (r) {
-      log(r.toString());
-      transcriptionText = r['text'];
+      data = r;
+      transcriptionText = r['paragraphs']['transcript'];
+      log('topics : ${r['topics']}');
+      log('Total paragraphs : ${r['paragraphs']}');
+      log('paragraphs : ${r['paragraphs']['paragraphs']}');
+
+      for (Map<String, dynamic> x in r['topics']) {
+        Topic n = Topic.fromJson(x);
+        topics.add(n);
+      }
+      for (Map<String, dynamic> x in r['paragraphs']['paragraphs']) {
+        Paragraph n = Paragraph.fromJson(x);
+        paragraphs.add(n);
+      }
+
       emit(TranscriptionSuccessState(
           message: 'Transcripted Successfully', fileName: title));
     });

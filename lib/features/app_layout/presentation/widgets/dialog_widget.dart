@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -77,9 +79,9 @@ class CustomDialogWidget extends StatelessWidget {
                       title: namecontroller.text,
                       transcriptionText: '',
                       createdAt: DateTime.now(),
-                        duration: cubit.audioDuration!,
-                        audioName: namecontroller.text +
-                            DateTime.now().millisecondsSinceEpoch.toString(),
+                      duration: cubit.audioDuration!,
+                      audioName: namecontroller.text +
+                          DateTime.now().millisecondsSinceEpoch.toString(),
                       status: FileStatus.trancripting,
                     );
                     cubit.audios.add(audioModel);
@@ -89,7 +91,12 @@ class CustomDialogWidget extends StatelessWidget {
                     await cubit
                         .transcripeFile(cubit.filePath, audioModel.audioName)
                         .whenComplete(() {
-                      audioModel.transcriptionText = cubit.transcriptionText!;
+                      audioModel.transcriptionText =
+                          cubit.data!['paragraphs']['transcript'];
+                      audioModel.paragraphs = cubit.paragraphs;
+                      audioModel.topics = cubit.topics;
+
+                      log(audioModel.toString());
                       cubit.uploadFile(audioModel: audioModel);
 
                       namecontroller.clear();
