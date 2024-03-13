@@ -3,7 +3,6 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,6 +14,7 @@ import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
 import 'package:sum_cap/features/record_audio/presentation/pages/audio_topics.dart';
+import 'package:sum_cap/features/record_audio/presentation/pages/chatbot_screen.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/option_file_widget.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/play_audio_file.dart'
     as play_audio_file;
@@ -291,6 +291,22 @@ class _RecordDetailsState extends State<RecordDetails> {
                                               )));
                                 },
                                 width: 75.w,
+                                height: 36.h,
+                              ),
+                              20.w.sizedBoxWidth,
+                              OptionButton(
+                                buttonText: ' ChatBot',
+                                icon: FontAwesomeIcons.robot,
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ChatBotScreen(
+                                                transcriptionText: widget
+                                                    .audio.transcriptionText,
+                                              )));
+                                },
+                                width: 80.w,
                                 height: 36.h,
                               ),
                             ],
