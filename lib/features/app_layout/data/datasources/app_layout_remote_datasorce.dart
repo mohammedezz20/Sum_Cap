@@ -15,6 +15,7 @@ abstract class AppLayoutRemoteDataSource {
   Future<Map<String, dynamic>> getUserAudios();
   Future<Map<String, dynamic>> transcritpion({required String filePath});
   Future<String> uploadAudio({required AudioModel audioModel});
+  Future<String> uploadYoutubeAudio({required AudioModel audioModel});
 }
 
 class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
@@ -49,7 +50,7 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
       final request = http.MultipartRequest(
           'POST',
           Uri.parse(
-              'https://api.deepgram.com/v1/listen?detect_topics=true&smart_format=true&paragraphs=true&language=en&model=nova-2'));
+              'https://api.deepgram.com/v1/listen?detect_topics=true&smart_format=true&paragraphs=true&diarize=true&language=en&model=nova-2'));
       request.headers['Authorization'] = 'Token $deepgramApiKey';
       request.files.add(http.MultipartFile.fromBytes(
           'file', file.readAsBytesSync(),
@@ -60,6 +61,7 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
       request.fields['smart_format'] = true.toString();
       request.fields['detect_topics'] = true.toString();
       request.fields['paragraphs'] = true.toString();
+      request.fields['diarize'] = true.toString();
 
       final response = await client.send(request);
 
@@ -113,8 +115,11 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
     request.fields.addAll({
       'title': audioModel.title,
       'transcriptionText': audioModel.transcriptionText,
-      'duration': audioModel.duration
+      'duration': audioModel.duration,
+      'paragraphs': jsonEncode(audioModel.paragraphs),
+      'topics': jsonEncode(audioModel.topics),
     });
+
     request.files.add(await http.MultipartFile.fromPath(
         'audio', audioModel.audioUrl,
         filename: basename(audioModel.audioUrl)));
@@ -126,5 +131,10 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
     var responseData = await response.stream.bytesToString();
 
     return responseData;
+  }
+
+  @override
+  Future<String> uploadYoutubeAudio({required AudioModel audioModel}) {
+    throw UnimplementedError();
   }
 }

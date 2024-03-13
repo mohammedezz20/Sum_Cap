@@ -122,4 +122,21 @@ class AudioCubit extends Cubit<AudioState> {
       );
     });
   }
+
+  Duration _duration = const Duration();
+  Duration _position = const Duration();
+
+  Duration get duration => _duration;
+  Duration get position => _position;
+  changeDuration(newDuration) {
+    _duration = newDuration;
+
+    emit(ChangeDuration());
+  }
+
+  changePosition(newPosition) {
+    _position = newPosition;
+
+    emit(ChangePosition());
+  }
 }

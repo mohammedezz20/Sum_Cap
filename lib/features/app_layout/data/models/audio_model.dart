@@ -96,10 +96,10 @@ class AudioModel {
 
 class Paragraph {
   String paragraphId;
-  double end;
+  num end;
   int numWords;
   List<Sentence> sentences;
-  double start;
+  num start;
 
   Paragraph({
     required this.paragraphId,
@@ -138,8 +138,8 @@ class Paragraph {
 
 class Sentence {
   String sentenceId;
-  double end;
-  double start;
+  num end;
+  num start;
   String text;
 
   Sentence({
@@ -160,7 +160,6 @@ class Sentence {
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': sentenceId,
       'end': end,
       'start': start,
       'text': text,
@@ -202,7 +201,6 @@ class Topic {
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': topicId,
       'end_word': endWord,
       'start_word': startWord,
       'text': text,
@@ -219,7 +217,7 @@ class Topic {
 
 class TopicDetail {
   String? topicId;
-  double? confidence;
+  num? confidence;
   String? topic;
 
   TopicDetail({
@@ -238,7 +236,6 @@ class TopicDetail {
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': topicId,
       'confidence': confidence,
       'topic': topic,
     };

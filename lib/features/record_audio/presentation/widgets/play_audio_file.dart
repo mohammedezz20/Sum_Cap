@@ -8,6 +8,7 @@ import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/core/utils/extensions/string_extensions.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/app_layout/presentation/pages/app_layout.dart';
+import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/media_player_button.dart';
 
 class AdvancedAudioPlayer extends StatefulWidget {
@@ -23,6 +24,8 @@ class AdvancedAudioPlayer extends StatefulWidget {
 
 class _AdvancedAudioPlayerState extends State<AdvancedAudioPlayer>
     with WidgetsBindingObserver {
+  late AudioCubit cubit;
+
   Duration _duration = const Duration();
   Duration _position = const Duration();
   AudioState audioState = AudioState.none;
@@ -40,6 +43,7 @@ class _AdvancedAudioPlayerState extends State<AdvancedAudioPlayer>
     FontAwesomeIcons.rotateRight,
   ];
   getDuration() async {
+    cubit.changeDuration(Duration(seconds: widget.audioModel.duration.toInt()));
     _duration = Duration(seconds: widget.audioModel.duration.toInt());
     log("from getDuration function => duration:${_duration.inSeconds}");
     List<String> timeParts = widget.audioModel.duration.split(':');
@@ -48,6 +52,7 @@ class _AdvancedAudioPlayerState extends State<AdvancedAudioPlayer>
     int seconds = int.parse(timeParts[1]);
 
     _duration = Duration(minutes: minutes, seconds: seconds);
+    cubit.changeDuration(Duration(minutes: minutes, seconds: seconds));
 
     if (widget.audioModel.audioUrl.contains('http')) {
       await advancedPlayer.setSourceUrl(widget.audioModel.audioUrl);
@@ -60,21 +65,26 @@ class _AdvancedAudioPlayerState extends State<AdvancedAudioPlayer>
 
   @override
   void initState() {
+    cubit = AudioCubit.get(context);
     WidgetsBinding.instance.addObserver(this);
     List<String> timeParts = widget.audioModel.duration.split(':');
 
     int minutes = int.parse(timeParts[0]);
     int seconds = int.parse(timeParts[1]);
 
+    cubit.changeDuration(Duration(minutes: minutes, seconds: seconds));
     _duration = Duration(minutes: minutes, seconds: seconds);
 
     advancedPlayer.onPositionChanged.listen((p) {
       setState(() {
         _position = p;
+        cubit.changePosition(p);
       });
     });
     advancedPlayer.onPlayerComplete.listen((event) {
       _position = Duration.zero;
+      cubit.changePosition(Duration.zero);
+
       setState(() {
         audioState = AudioState.none;
       });
