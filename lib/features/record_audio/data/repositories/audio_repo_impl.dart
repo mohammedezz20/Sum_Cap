@@ -49,4 +49,15 @@ class AudioRepoImpl extends AudioRepo {
       return Left(SystemFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> askChatBot(
+      String text, String message, bool isRelated) async {
+    try {
+      var response = await _api.askChatBot(text, message, isRelated);
+      return Right(response);
+    } catch (e) {
+      return Left(SystemFailure(message: e.toString()));
+    }
+  }
 }

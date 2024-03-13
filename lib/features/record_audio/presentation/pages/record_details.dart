@@ -13,6 +13,7 @@ import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
+import 'package:sum_cap/features/record_audio/presentation/pages/chatbot_screen.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/option_file_widget.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/play_audio_file.dart'
     as play_audio_file;
@@ -196,72 +197,92 @@ class _RecordDetailsState extends State<RecordDetails> {
                         ],
                       ),
                       20.h.sizedBoxHeight,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          OptionButton(
-                            buttonText:
-                                (cubit.dataStatus == DataStatus.readOnly)
-                                    ? 'Edit'
-                                    : 'Save',
-                            icon: (cubit.dataStatus == DataStatus.readOnly)
-                                ? Icons.edit
-                                : FontAwesomeIcons.floppyDisk,
-                            onTap: () {
-                              cubit.changeDataStatus(context);
-                            },
-                            width: 65.w,
-                            height: 36.h,
-                          ),
-                          (state is SummarizeAudioLoadingState)
-                              ? const Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppColor.primaryColor,
+                      Container(
+                        height: 40,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          children: [
+                            OptionButton(
+                              buttonText:
+                                  (cubit.dataStatus == DataStatus.readOnly)
+                                      ? 'Edit'
+                                      : 'Save',
+                              icon: (cubit.dataStatus == DataStatus.readOnly)
+                                  ? Icons.edit
+                                  : FontAwesomeIcons.floppyDisk,
+                              onTap: () {
+                                cubit.changeDataStatus(context);
+                              },
+                              width: 65.w,
+                              height: 36.h,
+                            ),
+                            (state is SummarizeAudioLoadingState)
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColor.primaryColor,
+                                    ),
+                                  )
+                                : OptionButton(
+                                    buttonText: ' Summary',
+                                    icon: FontAwesomeIcons.wandMagicSparkles,
+                                    onTap: () {
+                                      cubit.summarizeText(
+                                          widget.audio.transcriptionText,
+                                          context);
+                                    },
+                                    width: 93.w,
+                                    height: 36.h,
                                   ),
-                                )
-                              : OptionButton(
-                                  buttonText: 'Summary',
-                                  icon: FontAwesomeIcons.wandMagicSparkles,
-                                  onTap: () {
-                                    cubit.summarizeText(
-                                        widget.audio.transcriptionText,
-                                        context);
-                                  },
-                                  width: 93.w,
-                                  height: 36.h,
-                                ),
-                          (state is TranslateAudioLoadingState)
-                              ? const Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppColor.primaryColor,
+                            (state is TranslateAudioLoadingState)
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColor.primaryColor,
+                                    ),
+                                  )
+                                : OptionButton(
+                                    buttonText: ' Translate',
+                                    icon: FontAwesomeIcons.language,
+                                    onTap: () {
+                                      cubit.translateText(
+                                          widget.audio.transcriptionText,
+                                          context);
+                                    },
+                                    width: 87.w,
+                                    height: 36.h,
                                   ),
-                                )
-                              : OptionButton(
-                                  buttonText: 'Translate',
-                                  icon: FontAwesomeIcons.language,
-                                  onTap: () {
-                                    cubit.translateText(
-                                        widget.audio.transcriptionText,
-                                        context);
-                                  },
-                                  width: 87.w,
-                                  height: 36.h,
-                                ),
-                          OptionButton(
-                            buttonText: 'Copy',
-                            icon: FontAwesomeIcons.copy,
-                            onTap: () {
-                              Clipboard.setData(ClipboardData(
-                                  text: widget.audio.transcriptionText));
-                              context.showAwesomeSnackbar(
-                                  contentType: ContentType.success,
-                                  title: '',
-                                  message: 'Copied to clipboard');
-                            },
-                            width: 65.w,
-                            height: 36.h,
-                          ),
-                        ],
+                            OptionButton(
+                              buttonText: 'Copy',
+                              icon: FontAwesomeIcons.copy,
+                              onTap: () {
+                                Clipboard.setData(ClipboardData(
+                                    text: widget.audio.transcriptionText));
+                                context.showAwesomeSnackbar(
+                                    contentType: ContentType.success,
+                                    title: '',
+                                    message: 'Copied to clipboard');
+                              },
+                              width: 65.w,
+                              height: 36.h,
+                            ),
+                            OptionButton(
+                              buttonText: ' ChatBot',
+                              icon: FontAwesomeIcons.robot,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatBotScreen(
+                                        transcriptionText:
+                                            widget.audio.transcriptionText),
+                                  ),
+                                );
+                              },
+                              width: 80.w,
+                              height: 36.h,
+                            ),
+                          ],
+                        ),
                       ),
                       20.h.sizedBoxHeight,
                       Padding(
@@ -311,7 +332,7 @@ class _RecordDetailsState extends State<RecordDetails> {
                         audioModel: widget.audio,
                         // path: widget.audio.audio,
                         // advancedPlayer: advancedPlayer,
-                      )
+                      ),
                     ],
                   ),
                 ),

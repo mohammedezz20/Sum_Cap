@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:sum_cap/core/utils/enums.dart';
 
 class AudioModel {
@@ -96,7 +93,7 @@ class AudioModel {
 
 class Paragraph {
   String paragraphId;
-  double end;
+  num end;
   int numWords;
   List<Sentence> sentences;
   double start;
@@ -138,7 +135,7 @@ class Paragraph {
 
 class Sentence {
   String sentenceId;
-  double end;
+  num end;
   double start;
   String text;
 
@@ -152,7 +149,7 @@ class Sentence {
   factory Sentence.fromJson(Map<String, dynamic> json) {
     return Sentence(
       sentenceId: json['_id'] ?? '',
-      end: json['end'] ?? 0.0,
+      end: json['end'],
       start: json['start'] ?? 0.0,
       text: json['text'] ?? '',
     );

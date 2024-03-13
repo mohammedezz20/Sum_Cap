@@ -72,3 +72,17 @@ class SummarizeAudioErrorState extends AudioState {
   final String message;
   const SummarizeAudioErrorState(this.message);
 }
+
+class AskChatBotLoadingState extends AudioState {}
+
+class AskChatBotSuccessState extends AudioState {
+  final String translatedText;
+
+  const AskChatBotSuccessState(this.translatedText);
+}
+
+class AskChatBotErrorState extends AudioState {
+  final String message;
+
+  const AskChatBotErrorState(this.message);
+}

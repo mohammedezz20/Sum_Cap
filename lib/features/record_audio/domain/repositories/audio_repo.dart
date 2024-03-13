@@ -8,4 +8,7 @@ abstract class AudioRepo {
   Future<Either<Failure, http.Response>> updateAudio(AudioModel audioModel);
   Future<Either<Failure, String>> translateText(String text);
   Future<Either<Failure, String>> summarizeText(String text);
+
+  Future<Either<Failure, String>> askChatBot(
+      String text, String message, bool isRelated);
 }

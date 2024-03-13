@@ -13,6 +13,8 @@ abstract class AudioRemoteDataSource {
 
   Future<String> translateText(String text);
   Future<String> summarizeText(String text);
+
+  Future<String> askChatBot(String text, String message, bool isRelated);
 }
 
 class AudioRemoteDataSourceImpl extends AudioRemoteDataSource {
@@ -45,7 +47,7 @@ class AudioRemoteDataSourceImpl extends AudioRemoteDataSource {
 
   @override
   Future<String> summarizeText(text) async {
-    String apiKey = '.......Your Api Key .......';
+    String apiKey = 'AIzaSyAwP4p1AwxMy0pcuztKnTzxS3tXGCORF7k';
     final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
 
     String prompt = '$text summarize this';
@@ -56,10 +58,25 @@ class AudioRemoteDataSourceImpl extends AudioRemoteDataSource {
 
   @override
   Future<String> translateText(text) async {
-    String apiKey = '...... Your API Key ......';
+    String apiKey = 'AIzaSyAwP4p1AwxMy0pcuztKnTzxS3tXGCORF7k';
     final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
 
     String prompt = '$text translate this to arabic';
+    final content = [Content.text(prompt)];
+    final response = await model.generateContent(content);
+    return response.text!;
+  }
+
+  @override
+  Future<String> askChatBot(text, String message, bool isRelated) async {
+    String apiKey = 'AIzaSyAwP4p1AwxMy0pcuztKnTzxS3tXGCORF7k';
+    final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
+    String prompt;
+    if (isRelated = true) {
+      prompt = '$text $message';
+    } else {
+      prompt = message;
+    }
     final content = [Content.text(prompt)];
     final response = await model.generateContent(content);
     return response.text!;

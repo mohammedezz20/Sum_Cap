@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 
@@ -23,28 +22,31 @@ class OptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomButton(
-      widget: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: AppColor.primaryColor,
-            size: 18.w,
-          ),
-          5.w.sizedBoxWidth,
-          Text(
-            buttonText,
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall!
-                .copyWith(color: AppColor.primaryColor, fontSize: 14.sp),
-          ),
-        ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 4.w),
+      child: CustomButton(
+        widget: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: AppColor.primaryColor,
+              size: 18.w,
+            ),
+            5.w.sizedBoxWidth,
+            Text(
+              buttonText,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall!
+                  .copyWith(color: AppColor.primaryColor, fontSize: 14.sp),
+            ),
+          ],
+        ),
+        height: height,
+        width: width,
+        onTap: onTap,
       ),
-      height: height,
-      width: width,
-      onTap: onTap,
     );
   }
 }

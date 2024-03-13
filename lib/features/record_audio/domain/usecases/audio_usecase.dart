@@ -24,4 +24,9 @@ class AudioUseCase {
   Future<Either<Failure, String>> translateText(String text) async {
     return await _repo.translateText(text);
   }
+
+  Future<Either<Failure, String>> askChatBot(
+      String text, String message, bool isRelated) async {
+    return await _repo.askChatBot(text, message, isRelated);
+  }
 }
