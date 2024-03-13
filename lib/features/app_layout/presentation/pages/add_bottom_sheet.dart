@@ -38,39 +38,39 @@ class AddBottomSheet extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CustomButton(
-                    widget: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.mic_none_outlined,
-                          color: AppColor.primaryColor,
-                          size: 30,
-                        ),
-                        2.w.sizedBoxWidth,
-                        Text(
-                          'Record Audio',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: AppColor.primaryColor,
-                                  fontSize: 18.sp),
-                        ),
-                      ],
-                    ),
-                    height: 45.h,
-                    width: double.infinity,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RecordAudioScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  15.h.sizedBoxHeight,
+                  // CustomButton(
+                  //   widget: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       const Icon(
+                  //         Icons.mic_none_outlined,
+                  //         color: AppColor.primaryColor,
+                  //         size: 30,
+                  //       ),
+                  //       2.w.sizedBoxWidth,
+                  //       Text(
+                  //         'Record Audio',
+                  //         style: Theme.of(context)
+                  //             .textTheme
+                  //             .titleLarge!
+                  //             .copyWith(
+                  //                 color: AppColor.primaryColor,
+                  //                 fontSize: 18.sp),
+                  //       ),
+                  //     ],
+                  //   ),
+                  //   height: 45.h,
+                  //   width: double.infinity,
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => const RecordAudioScreen(),
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
+                  // 15.h.sizedBoxHeight,
                   CustomButton(
                       widget: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

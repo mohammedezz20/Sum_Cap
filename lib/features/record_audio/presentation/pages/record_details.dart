@@ -306,7 +306,7 @@ class _RecordDetailsState extends State<RecordDetails> {
                                                     .audio.transcriptionText,
                                               )));
                                 },
-                                width: 80.w,
+                                width: 90.w,
                                 height: 36.h,
                               ),
                             ],

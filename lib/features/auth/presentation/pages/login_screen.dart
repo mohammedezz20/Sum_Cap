@@ -7,6 +7,7 @@ import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/enums.dart';
 import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/core/widgets/custom_form_field.dart';
+import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
 import 'package:sum_cap/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:sum_cap/features/auth/presentation/pages/forget_password_screen.dart';
 import 'package:sum_cap/features/auth/presentation/pages/register_screen.dart';
@@ -184,6 +185,7 @@ class LoginScreen extends StatelessWidget {
               message: 'Welcome ${state.user.username}',
               title: 'Login Success',
               contentType: ContentType.success);
+          AppLayoutCubit.get(context).getAudios();
           context.jumpToWithReplacement(const AppLayout());
         }
       },

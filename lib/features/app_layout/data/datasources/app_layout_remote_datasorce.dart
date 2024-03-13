@@ -70,16 +70,15 @@ class AppLayoutRemoteDataSourceImpl implements AppLayoutRemoteDataSource {
 
         final result = jsonDecode(responseBody);
 
-        return result['results']['channels'][0]['alternatives']
-            [0]; // Return parsed map if valid
+        return result['results']['channels'][0]['alternatives'][0];
       } else {
+        log(response.toString());
         throw Exception('Error: ${response.statusCode}');
       }
     } catch (error) {
-      throw Exception(
-          'Error during transcription: $error'); // Catch general errors
+      throw Exception('Error during transcription: $error');
     } finally {
-      client.close(); // Close the client even if an error occurs
+      client.close();
     }
   }
   // Future<Map<String, dynamic>> transcritpion({required String filePath}) async {
