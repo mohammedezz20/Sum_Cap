@@ -128,7 +128,7 @@ class AudioPlayerWidget extends StatelessWidget {
                         Navigator.pop(context);
 
                         await cubit
-                            .transcripeFile(path, audioModel.audioName)
+                            .transcriptFile(path, audioModel.audioName)
                             .whenComplete(() {
                           audioModel.transcriptionText =
                               cubit.transcriptionText ?? '';
@@ -142,6 +142,21 @@ class AudioPlayerWidget extends StatelessWidget {
                           cubit.transcriptionText = '';
                           cubit.audioDuration = '';
                         });
+                        // await cubit
+                        //     .transcripeFile(path, audioModel.audioName)
+                        //     .whenComplete(() {
+                        //   audioModel.transcriptionText =
+                        //       cubit.transcriptionText ?? '';
+                        //   cubit
+                        //       .uploadFile(audioModel: audioModel)
+                        //       .whenComplete(() {
+                        //     // audioRecorderController.delete(audioModel.audio);
+                        //   });
+                        //   audioCubit.nameController.clear();
+                        //   cubit.filePath = '';
+                        //   cubit.transcriptionText = '';
+                        //   cubit.audioDuration = '';
+                        // });
                       },
                     ),
                   ],

@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:deepgram_speech_to_text/deepgram_speech_to_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:sum_cap/core/utils/api_constants.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/app_layout/domain/usecases/app_layout_use_case.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_states.dart';
@@ -53,7 +56,6 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
       } else {
         r['data']['audios'].forEach((element) {
           audios.add(AudioModel.fromJson(element));
-          log(element.toString());
         });
 
         emit(AppLayoutGetUserAudioSuccessState('Get Audios Successfully'));
@@ -102,6 +104,36 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
   Map<String, dynamic>? data;
   List<Topic> topics = [];
   List<Paragraph> paragraphs = [];
+
+  transcriptFile(filepath, title) async {
+    emit(TranscriptionLoadingState(fileName: title));
+    try {
+      Map<String, dynamic> params = {
+        'model': 'whisper-medium',
+        'detect_language': true,
+        'topics': true,
+        'smart_format': true,
+        'punctuate': true,
+        'paragraphs': true,
+        'diarize': true
+      };
+      Deepgram deepgram =
+          Deepgram(ApiModelConstatnts.deepGramApiKey, baseQueryParams: params);
+      Map<String, dynamic> text = jsonDecode(await deepgram.transcribeFromFile(
+        File(filepath),
+      ));
+      data = text;
+      transcriptionText = text['results']['channels'][0]['alternatives'][0]
+          ['paragraphs']['transcript'];
+      log(text.toString());
+      emit(TranscriptionSuccessState(
+          fileName: title, message: 'Transcripted Successfully'));
+    } catch (e) {
+      log(e.toString());
+      emit(TranscriptionErrorState(error: e.toString(), fileName: title));
+    }
+  }
+
   Future<void> transcripeFile(filePath, title) async {
     emit(TranscriptionLoadingState(
       fileName: title,
@@ -132,12 +164,60 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
     });
   }
 
+  Future<void> transcripeYoutubeVideo(filePath, title) async {
+    emit(TranscriptionLoadingState(
+      fileName: title,
+    ));
+    var response = await _usecases.transcriptYoutubeVideo(filePath: filePath);
+    response.fold((l) {
+      log(l.toString());
+      emit(TranscriptionErrorState(
+          fileName: title, error: 'Error When Transcripting'));
+    }, (r) {
+      log(r.toString());
+      data = r;
+      transcriptionText = r['paragraphs']['transcript'];
+      log('topics : ${r['topics']}');
+      log('Total paragraphs : ${r['paragraphs']}');
+      log('paragraphs : ${r['paragraphs']['paragraphs']}');
+
+      for (Map<String, dynamic> x in r['topics']) {
+        Topic n = Topic.fromJson(x);
+        topics.add(n);
+      }
+      for (Map<String, dynamic> x in r['paragraphs']['paragraphs']) {
+        Paragraph n = Paragraph.fromJson(x);
+        paragraphs.add(n);
+      }
+
+      emit(TranscriptionSuccessState(
+          message: 'Transcripted Successfully', fileName: title));
+    });
+  }
+
   //!Upload File
   Future<void> uploadFile({required AudioModel audioModel}) async {
     emit(UploadAudioLoadingState(
       fileName: audioModel.audioName,
     ));
     var response = await _usecases.uploadAudios(audioModel: audioModel);
+    response.fold((l) {
+      log(l.toString());
+      emit(UploadAudioErrorState(
+          error: 'Error When Uploading', fileName: audioModel.audioName));
+    }, (r) {
+      log(r.toString());
+      emit(UploadAudioSuccessState(
+          message: 'Uploaded Successfully', fileName: audioModel.audioName));
+    });
+  }
+
+  Future<void> uploadYouTubeFile({required AudioModel audioModel}) async {
+    emit(UploadAudioLoadingState(
+      fileName: audioModel.audioName,
+    ));
+    var response =
+        await _usecases.uploadAudioFromYoutube(audioModel: audioModel);
     response.fold((l) {
       log(l.toString());
       emit(UploadAudioErrorState(
