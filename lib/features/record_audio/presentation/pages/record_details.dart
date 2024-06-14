@@ -271,29 +271,31 @@ class _RecordDetailsState extends State<RecordDetails> {
                                 height: 36.h,
                               ),
                               20.w.sizedBoxWidth,
-                              OptionButton(
-                                buttonText: 'Topics',
-                                icon: FontAwesomeIcons.layerGroup,
-                                onTap: () {
-                                  var newaudioModel = widget.audio;
-                                  List<Topic> topic = [];
-                                  for (var element in widget.audio.topics!) {
-                                    if (element.topics.isNotEmpty) {
-                                      topic.add(element);
+                              if (widget.audio.topics!.isNotEmpty) ...[
+                                OptionButton(
+                                  buttonText: 'Topics',
+                                  icon: FontAwesomeIcons.layerGroup,
+                                  onTap: () {
+                                    var newaudioModel = widget.audio;
+                                    List<Topic> topic = [];
+                                    for (var element in widget.audio.topics!) {
+                                      if (element.topics.isNotEmpty) {
+                                        topic.add(element);
+                                      }
                                     }
-                                  }
-                                  newaudioModel.topics = topic;
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => AudioTopic(
-                                                audioModel: newaudioModel,
-                                              )));
-                                },
-                                width: 75.w,
-                                height: 36.h,
-                              ),
-                              20.w.sizedBoxWidth,
+                                    newaudioModel.topics = topic;
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AudioTopic(
+                                                  audioModel: newaudioModel,
+                                                )));
+                                  },
+                                  width: 75.w,
+                                  height: 36.h,
+                                ),
+                                20.w.sizedBoxWidth,
+                              ],
                               OptionButton(
                                 buttonText: ' ChatBot',
                                 icon: FontAwesomeIcons.robot,

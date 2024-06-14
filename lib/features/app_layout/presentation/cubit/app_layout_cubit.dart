@@ -105,33 +105,52 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
   List<Topic> topics = [];
   List<Paragraph> paragraphs = [];
 
+//!!!!!!!!!!!!!!!!!!!!!!    هي دي يا علاء
   transcriptFile(filepath, title) async {
     emit(TranscriptionLoadingState(fileName: title));
-    try {
-      Map<String, dynamic> params = {
-        'model': 'whisper-medium',
-        'detect_language': true,
-        'topics': true,
-        'smart_format': true,
-        'punctuate': true,
-        'paragraphs': true,
-        'diarize': true
-      };
-      Deepgram deepgram =
-          Deepgram(ApiModelConstatnts.deepGramApiKey, baseQueryParams: params);
-      Map<String, dynamic> text = jsonDecode(await deepgram.transcribeFromFile(
-        File(filepath),
-      ));
-      data = text;
-      transcriptionText = text['results']['channels'][0]['alternatives'][0]
-          ['paragraphs']['transcript'];
-      log(text.toString());
-      emit(TranscriptionSuccessState(
-          fileName: title, message: 'Transcripted Successfully'));
-    } catch (e) {
-      log(e.toString());
-      emit(TranscriptionErrorState(error: e.toString(), fileName: title));
+    // try {
+    Map<String, dynamic> params = {
+      'model': 'whisper-medium',
+      'detect_language': true,
+      'detect_topics': true,
+      'smart_format': true,
+      'punctuate': true,
+      'paragraphs': true,
+      'diarize': true,
+    };
+    Deepgram deepgram =
+        Deepgram(ApiModelConstatnts.deepGramApiKey, baseQueryParams: params);
+    DeepgramSttResult text = await deepgram.transcribeFromFile(
+      File(filepath),
+    );
+    data = text.map;
+    transcriptionText = data!['results']['channels'][0]['alternatives'][0]
+        ['paragraphs']['transcript'];
+    // log('data : $data');
+    // log(data!['results']['channels'][0]['alternatives'][0]['paragraphs']
+    //     ['transcript']);
+
+    for (Map<String, dynamic> x
+        in data!['results']['channels'][0]['alternatives'][0]['topics'] ?? []) {
+      Topic n = Topic.fromJson(x);
+      topics.add(n);
     }
+    log('Topics: $topics');
+    log('topics length: ${topics.length}');
+
+    for (Map<String, dynamic> x in data!['results']['channels'][0]
+            ['alternatives'][0]['paragraphs']['paragraphs'] ??
+        []) {
+      Paragraph n = Paragraph.fromJson(x);
+      paragraphs.add(n);
+    }
+
+    emit(TranscriptionSuccessState(
+        fileName: title, message: 'Transcripted Successfully'));
+    // } catch (e) {
+    //   log(e.toString());
+    //   emit(TranscriptionErrorState(error: e.toString(), fileName: title));
+    // }
   }
 
   Future<void> transcripeFile(filePath, title) async {
@@ -144,8 +163,9 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
       emit(TranscriptionErrorState(
           fileName: title, error: 'Error When Transcripting'));
     }, (r) {
+      log(r.toString());
       data = r;
-      transcriptionText = r['paragraphs']['transcript'];
+      transcriptionText = r['transcript'];
       log('topics : ${r['topics']}');
       log('Total paragraphs : ${r['paragraphs']}');
       log('paragraphs : ${r['paragraphs']['paragraphs']}');
@@ -165,34 +185,34 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
   }
 
   Future<void> transcripeYoutubeVideo(filePath, title) async {
-    emit(TranscriptionLoadingState(
-      fileName: title,
-    ));
-    var response = await _usecases.transcriptYoutubeVideo(filePath: filePath);
-    response.fold((l) {
-      log(l.toString());
-      emit(TranscriptionErrorState(
-          fileName: title, error: 'Error When Transcripting'));
-    }, (r) {
-      log(r.toString());
-      data = r;
-      transcriptionText = r['paragraphs']['transcript'];
-      log('topics : ${r['topics']}');
-      log('Total paragraphs : ${r['paragraphs']}');
-      log('paragraphs : ${r['paragraphs']['paragraphs']}');
+    // emit(TranscriptionLoadingState(
+    //   fileName: title,
+    // ));
+    // var response = await _usecases.transcriptYoutubeVideo(filePath: filePath);
+    // response.fold((l) {
+    //   log(l.toString());
+    //   emit(TranscriptionErrorState(
+    //       fileName: title, error: 'Error When Transcripting'));
+    // }, (r) {
+    //   log(r.toString());
+    //   data = r;
+    //   transcriptionText = r['paragraphs']['transcript'];
+    //   log('topics : ${r['topics']}');
+    //   log('Total paragraphs : ${r['paragraphs']}');
+    //   log('paragraphs : ${r['paragraphs']['paragraphs']}');
 
-      for (Map<String, dynamic> x in r['topics']) {
-        Topic n = Topic.fromJson(x);
-        topics.add(n);
-      }
-      for (Map<String, dynamic> x in r['paragraphs']['paragraphs']) {
-        Paragraph n = Paragraph.fromJson(x);
-        paragraphs.add(n);
-      }
+    //   for (Map<String, dynamic> x in r['topics']) {
+    //     Topic n = Topic.fromJson(x);
+    //     topics.add(n);
+    //   }
+    //   for (Map<String, dynamic> x in r['paragraphs']['paragraphs']) {
+    //     Paragraph n = Paragraph.fromJson(x);
+    //     paragraphs.add(n);
+    //   }
 
-      emit(TranscriptionSuccessState(
-          message: 'Transcripted Successfully', fileName: title));
-    });
+    //   emit(TranscriptionSuccessState(
+    //       message: 'Transcripted Successfully', fileName: title));
+    // });
   }
 
   //!Upload File
@@ -200,6 +220,7 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
     emit(UploadAudioLoadingState(
       fileName: audioModel.audioName,
     ));
+    log('while uploading    topics is : ${audioModel.topics!.length}');
     var response = await _usecases.uploadAudios(audioModel: audioModel);
     response.fold((l) {
       log(l.toString());
@@ -216,8 +237,9 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
     emit(UploadAudioLoadingState(
       fileName: audioModel.audioName,
     ));
-    var response =
-        await _usecases.uploadAudioFromYoutube(audioModel: audioModel);
+    var response;
+    // var response =
+    //     await _usecases.uploadAudioFromYoutube(audioModel: audioModel);
     response.fold((l) {
       log(l.toString());
       emit(UploadAudioErrorState(

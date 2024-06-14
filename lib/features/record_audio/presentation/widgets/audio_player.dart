@@ -132,6 +132,8 @@ class AudioPlayerWidget extends StatelessWidget {
                             .whenComplete(() {
                           audioModel.transcriptionText =
                               cubit.transcriptionText ?? '';
+                          audioModel.topics = cubit.topics;
+                          audioModel.paragraphs = cubit.paragraphs;
                           cubit
                               .uploadFile(audioModel: audioModel)
                               .whenComplete(() {

@@ -89,14 +89,15 @@ class CustomDialogWidget extends StatelessWidget {
                     Navigator.pop(context);
 
                     await cubit
-                        .transcripeFile(cubit.filePath, audioModel.audioName)
+                        .transcriptFile(cubit.filePath, audioModel.audioName)
                         .whenComplete(() {
                       audioModel.transcriptionText =
-                          cubit.data!['paragraphs']['transcript'];
+                          cubit.transcriptionText ?? '';
                       audioModel.paragraphs = cubit.paragraphs;
                       audioModel.topics = cubit.topics;
-
-                      log(audioModel.toString());
+                      log("====================================================================================");
+                      log(audioModel.topics!.length.toString());
+                      log(audioModel.paragraphs!.length.toString());
                       cubit.uploadFile(audioModel: audioModel);
 
                       namecontroller.clear();
