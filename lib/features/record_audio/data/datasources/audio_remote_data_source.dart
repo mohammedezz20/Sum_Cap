@@ -28,7 +28,7 @@ class AudioRemoteDataSourceImpl extends AudioRemoteDataSource {
   @override
   Future<http.Response> updateAudio(AudioModel audioModel) async {
     const baseUrl = '${APIConstants.baseUrl}${APIConstants.editAudio}';
-    final url = Uri.parse('$baseUrl${audioModel.id}');
+    final url = Uri.parse('$baseUrl${audioModel.audioId}');
     log(audioModel.title);
     final requestBody = jsonEncode({
       'transcriptionText': audioModel.transcriptionText,
@@ -45,7 +45,7 @@ class AudioRemoteDataSourceImpl extends AudioRemoteDataSource {
 
   @override
   Future<String> summarizeText(text) async {
-    String apiKey = '.......Your Api Key .......';
+    String apiKey = 'AIzaSyAZ9fB6JQB_FyuuQtaatHaGDFIRhMBaWDY';
     final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
 
     String prompt = '$text summarize this';
@@ -56,7 +56,7 @@ class AudioRemoteDataSourceImpl extends AudioRemoteDataSource {
 
   @override
   Future<String> translateText(text) async {
-    String apiKey = '...... Your API Key ......';
+    String apiKey = 'AIzaSyAZ9fB6JQB_FyuuQtaatHaGDFIRhMBaWDY';
     final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
 
     String prompt = '$text translate this to arabic';

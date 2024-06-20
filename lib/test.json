@@ -1,0 +1,272 @@
+{
+  "results": {
+    "channels": [
+      {
+        "alternatives": [
+          {
+            "transcript": "Hello, my name is Mohammed Ashraf Ezz. How are you and what's your name? Can you help me in my assignment?",
+            "confidence": 0.9026625,
+            "words": [
+              {
+                "word": "hello",
+                "start": 1.18,
+                "end": 1.68,
+                "confidence": 0.9026625,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "Hello,"
+              },
+              {
+                "word": "my",
+                "start": 1.6999999,
+                "end": 1.9,
+                "confidence": 0.9843136,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "my"
+              },
+              {
+                "word": "name",
+                "start": 1.9,
+                "end": 2.1,
+                "confidence": 0.5966702,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "name"
+              },
+              {
+                "word": "is",
+                "start": 2.1,
+                "end": 2.26,
+                "confidence": 0.74329555,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "is"
+              },
+              {
+                "word": "mohammed",
+                "start": 2.26,
+                "end": 2.76,
+                "confidence": 0.9946312,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "Mohammed"
+              },
+              {
+                "word": "ashraf",
+                "start": 2.76,
+                "end": 3.1999998,
+                "confidence": 0.17090778,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "Ashraf"
+              },
+              {
+                "word": "ezz",
+                "start": 3.1999998,
+                "end": 3.6999998,
+                "confidence": 0.6365927,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "Ezz."
+              },
+              {
+                "word": "how",
+                "start": 4.54,
+                "end": 4.7799997,
+                "confidence": 0.99587363,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "How"
+              },
+              {
+                "word": "are",
+                "start": 4.7799997,
+                "end": 4.98,
+                "confidence": 0.7920784,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "are"
+              },
+              {
+                "word": "you",
+                "start": 4.98,
+                "end": 5.2799997,
+                "confidence": 0.97961706,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "you"
+              },
+              {
+                "word": "and",
+                "start": 5.2799997,
+                "end": 5.5,
+                "confidence": 0.7695471,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "and"
+              },
+              {
+                "word": "what's",
+                "start": 5.5,
+                "end": 5.74,
+                "confidence": 0.98522437,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "what's"
+              },
+              {
+                "word": "your",
+                "start": 5.74,
+                "end": 5.94,
+                "confidence": 0.94847095,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "your"
+              },
+              {
+                "word": "name",
+                "start": 5.94,
+                "end": 6.44,
+                "confidence": 0.5508835,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "name?"
+              },
+              {
+                "word": "can",
+                "start": 7.58,
+                "end": 7.7999997,
+                "confidence": 0.9506009,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "Can"
+              },
+              {
+                "word": "you",
+                "start": 7.7999997,
+                "end": 8.0199995,
+                "confidence": 0.7078156,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "you"
+              },
+              {
+                "word": "help",
+                "start": 8.0199995,
+                "end": 8.3,
+                "confidence": 0.8592958,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "help"
+              },
+              {
+                "word": "me",
+                "start": 8.3,
+                "end": 8.599999,
+                "confidence": 0.97693217,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "me"
+              },
+              {
+                "word": "in",
+                "start": 8.599999,
+                "end": 8.86,
+                "confidence": 0.9585657,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "in"
+              },
+              {
+                "word": "my",
+                "start": 8.86,
+                "end": 9.139999,
+                "confidence": 0.951038,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "my"
+              },
+              {
+                "word": "assignment",
+                "start": 9.139999,
+                "end": 9.639999,
+                "confidence": 0.26280677,
+                "speaker": 0,
+                "speaker_confidence": 1.0,
+                "punctuated_word": "assignment?"
+              }
+            ],
+            "paragraphs": {
+              "transcript": "Hello, my name is Mohammed Ashraf Ezz. How are you and what's your name? Can you help me in my assignment?",
+              "paragraphs": [
+                {
+                  "sentences": [
+                    {
+                      "text": "Hello, my name is Mohammed Ashraf Ezz.",
+                      "start": 1.18,
+                      "end": 3.6999998
+                    },
+                    {
+                      "text": "How are you and what's your name?",
+                      "start": 4.54,
+                      "end": 6.44
+                    },
+                    {
+                      "text": "Can you help me in my assignment?",
+                      "start": 7.58,
+                      "end": 9.639999
+                    }
+                  ],
+                  "speaker": 0,
+                  "num_words": 21,
+                  "start": 1.18,
+                  "end": 9.639999
+                }
+              ]
+            }
+          }
+        ],
+        "detected_language": "en",
+        "topics": {
+          "segments": [
+            {
+              "text": "Can you help me in my assignment?",
+              "start_word": 14,
+              "end_word": 20,
+              "topics": [
+                {
+                  "topic": "Assignment assistance",
+                  "confidence_score": 0.7552933
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "transaction_key": "deprecated",
+    "request_id": "0d60cefa-6ee8-4e32-85e4-212d03a4c6ca",
+    "sha256": "f54e723ccdb561ff27a354869bdd881395943614d6ca5d5920a6e24164edd154",
+    "created": "2024-05-21T20:57:16.316Z",
+    "duration": 10.657875,
+    "channels": 1,
+    "models": [
+      "c6481769-89cd-447f-be27-1e6e9dac3616"
+    ],
+    "model_info": {
+      "c6481769-89cd-447f-be27-1e6e9dac3616": {
+        "name": "medium-whisper",
+        "version": "2022-09-21.5",
+        "arch": "whisper"
+      }
+    },
+    "topics_info": {
+      "model_uuid": "ba5b22e4-b39a-4550-a4bc-d8655f5092bc",
+      "input_tokens": 31,
+      "output_tokens": 4
+    }
+  }
+}

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -73,22 +75,29 @@ class CustomDialogWidget extends StatelessWidget {
                 onTap: () async {
                   if (key.currentState?.validate() == true) {
                     AudioModel audioModel = AudioModel(
-                        audio: cubit.filePath!,
-                        title: namecontroller.text,
-                        transcriptionText: '',
-                        createdAt: DateTime.now(),
-                        duration: cubit.audioDuration!,
-                        audioName: namecontroller.text +
-                            DateTime.now().millisecondsSinceEpoch.toString(),
-                        status: FileStatus.trancripting);
+                      audioUrl: cubit.filePath!,
+                      title: namecontroller.text,
+                      transcriptionText: '',
+                      createdAt: DateTime.now(),
+                      duration: cubit.audioDuration!,
+                      audioName: namecontroller.text +
+                          DateTime.now().millisecondsSinceEpoch.toString(),
+                      status: FileStatus.trancripting,
+                    );
                     cubit.audios.add(audioModel);
                     Navigator.pop(context);
                     Navigator.pop(context);
 
                     await cubit
-                        .transcripeFile(cubit.filePath, audioModel.audioName)
+                        .transcriptFile(cubit.filePath, audioModel.audioName)
                         .whenComplete(() {
-                      audioModel.transcriptionText = cubit.transcriptionText!;
+                      audioModel.transcriptionText =
+                          cubit.transcriptionText ?? '';
+                      audioModel.paragraphs = cubit.paragraphs;
+                      audioModel.topics = cubit.topics;
+                      log("====================================================================================");
+                      log(audioModel.topics!.length.toString());
+                      log(audioModel.paragraphs!.length.toString());
                       cubit.uploadFile(audioModel: audioModel);
 
                       namecontroller.clear();

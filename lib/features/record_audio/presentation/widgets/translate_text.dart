@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sum_cap/core/utils/enums.dart';
 import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/core/widgets/custom_button.dart';
-import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
-import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_states.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
 
 import '../../../../config/themes/colors.dart';

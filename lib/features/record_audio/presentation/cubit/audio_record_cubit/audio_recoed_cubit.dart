@@ -77,7 +77,7 @@ class AudioRecoedCubit extends Cubit<AudioRecoedState> {
       //     "${DateTime.now().millisecondsSinceEpoch}.mp3");
       final fileName = path.join(
           (await _audioRecordFileHelper.getRecordDirectoryPath).path,
-          "${DateTime.now().millisecondsSinceEpoch}.mp3");
+          "${DateTime.now().millisecondsSinceEpoch}.wav");
       log(fileName);
 
       await _audioRecorder.start(const RecordConfig(), path: fileName);

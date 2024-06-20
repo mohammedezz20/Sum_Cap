@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/core/widgets/custom_button.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_states.dart';
+import 'package:sum_cap/features/app_layout/presentation/widgets/add_youtube_dialog_widget.dart';
 import 'package:sum_cap/features/record_audio/presentation/pages/record_audio_screen.dart';
 
 class AddBottomSheet extends StatelessWidget {
@@ -20,7 +22,7 @@ class AddBottomSheet extends StatelessWidget {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 10.w),
           alignment: Alignment.center,
-          height: 185.h,
+          height: 220.h,
           child: Column(
             children: [
               Padding(
@@ -68,6 +70,40 @@ class AddBottomSheet extends StatelessWidget {
                           builder: (context) => const RecordAudioScreen(),
                         ),
                       );
+                    },
+                  ),
+                  15.h.sizedBoxHeight,
+                  CustomButton(
+                    widget: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          FontAwesomeIcons.youtube,
+                          color: AppColor.primaryColor,
+                          size: 25,
+                        ),
+                        10.w.sizedBoxWidth,
+                        Text(
+                          'Transcript Youtube Video',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(
+                                  color: AppColor.primaryColor,
+                                  fontSize: 18.sp),
+                        ),
+                      ],
+                    ),
+                    height: 45.h,
+                    width: double.infinity,
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const YoutubeDialog();
+                        },
+                      );
+                      //Todo Transcript Youtube  Video Function
                     },
                   ),
                   15.h.sizedBoxHeight,

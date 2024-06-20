@@ -9,6 +9,7 @@ import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/core/widgets/custom_button.dart';
 import 'package:sum_cap/core/widgets/custom_form_field.dart';
 import 'package:sum_cap/core/widgets/dialog_utils.dart';
+import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
 import 'package:sum_cap/features/auth/presentation/pages/login_screen.dart';
 import 'package:sum_cap/features/auth/presentation/pages/reset_password_screen.dart';
 
@@ -129,6 +130,12 @@ class UserScreen extends StatelessWidget {
               message: state.message,
               title: '',
               contentType: ContentType.failure);
+        } else if (state is UserEditUserSuccessState) {
+          DialogUtils.hideLoading(context);
+          context.showAwesomeSnackbar(
+              message: state.message,
+              title: '',
+              contentType: ContentType.success);
         } else if (state is UserDeleteUserSuccessState) {
           DialogUtils.hideLoading(context);
           context.showAwesomeSnackbar(
@@ -147,6 +154,7 @@ class UserScreen extends StatelessWidget {
               message: 'Goodbye 👋👋',
               title: '',
               contentType: ContentType.success);
+          AppLayoutCubit.get(context).changeNavBar(0);
         }
       },
     );

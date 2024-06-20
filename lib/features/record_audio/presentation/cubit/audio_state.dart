@@ -72,3 +72,7 @@ class SummarizeAudioErrorState extends AudioState {
   final String message;
   const SummarizeAudioErrorState(this.message);
 }
+
+class ChangeDuration extends AudioState {}
+
+class ChangePosition extends AudioState {}

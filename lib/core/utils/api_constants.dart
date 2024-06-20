@@ -14,7 +14,12 @@ class APIConstants {
 }
 
 class ApiModelConstatnts {
-  static const String apiUrl = 'http://192.168.1.6:8000';
+  static const String apiUrl = 'https://sumcap101-uqk5.onrender.com';
+  static const String apiKey = '0edd6b2a8c7a9278cb43dcf1c698ff53907f18e2';
   static const String transcribttion = '/api/v1/transcribe';
   static const String summarize = '/api/v1/summarize';
+  static const String deepGramBaseUrl = 'https://api.deepgram.com/v1/listen';
+  static const String deepGramApiKey =
+      '2ce3b2380aa3db2bcab9635d7859449c98ecd464';
+  static const String deepGramTranscription = 'transcribe';
 }
