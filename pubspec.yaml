@@ -38,6 +38,7 @@ dependencies:
   readmore: ^2.2.0
   deepgram_speech_to_text: ^2.1.0
   awesome_snackbar_content: ^0.1.1
+  youtube_explode_dart: ^2.2.1
   
 
 dev_dependencies:

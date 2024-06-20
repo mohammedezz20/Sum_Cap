@@ -14,6 +14,7 @@ import 'package:sum_cap/features/app_layout/domain/usecases/app_layout_use_case.
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_states.dart';
 import 'package:sum_cap/features/app_layout/presentation/pages/home_screen.dart';
 import 'package:sum_cap/features/user_profile/presentation/pages/user_screen.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../../core/cach_helper.dart';
 import '../../../../core/global.dart';
@@ -21,6 +22,7 @@ import '../../../../dependcy_injection.dart';
 import '../widgets/dialog_widget.dart';
 
 //!Cubit
+final yt = YoutubeExplode();
 
 class AppLayoutCubit extends Cubit<AppLayoutStates> {
   AppLayoutCubit() : super(AppInitialState());
@@ -123,6 +125,7 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
     DeepgramSttResult text = await deepgram.transcribeFromFile(
       File(filepath),
     );
+    log('file path: $filepath');
     data = text.map;
     transcriptionText = data!['results']['channels'][0]['alternatives'][0]
         ['paragraphs']['transcript'];
@@ -271,6 +274,69 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
   //   log("error in uploading audio$responseData");
   //   return responseData;
   // }
+  Future<void> download(String id, context) async {
+    // Get video metadata.
+    final video = await yt.videos.get(id);
+
+    // Get the video manifest.
+    final manifest = await yt.videos.streamsClient.getManifest(id);
+    final streams = manifest.audioOnly;
+    final audio = streams.withHighestBitrate();
+    final audioStream = yt.videos.streamsClient.get(audio);
+
+    final fileName = '${video.title}.${audio.container.name}'
+        .replaceAll(r'\', '')
+        .replaceAll('.mp4', '')
+        .replaceAll('.webm', '')
+        .replaceAll('/', '')
+        .replaceAll('*', '')
+        .replaceAll('?', '')
+        .replaceAll('"', '')
+        .replaceAll('<', '')
+        .replaceAll('>', '')
+        .replaceAll('|', '');
+    final appDir = Directory('/storage/emulated/0/Download');
+    final file = File(
+        '${'${appDir!.path}/$fileName'.replaceAll('.webm', '').replaceAll('.mp4', '')}.mp3');
+    log(file.path);
+    // Delete the file if exists.
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+
+    // Open the file in writeAppend.
+    final output = file.openWrite(mode: FileMode.writeOnlyAppend);
+
+    // Track the file download status.
+    final len = audio.size.totalBytes;
+    var count = 0;
+
+    // Create the message and set the cursor position.
+    final msg = 'Downloading ${video.title}.${audio.container.name}';
+    stdout.writeln(msg);
+
+    // Listen for data received.
+    await for (final data in audioStream) {
+      // Keep track of the current downloaded data.
+      count += data.length;
+
+      // Calculate the current progress.
+      final progress = ((count / len) * 100).ceil();
+
+      log(progress.toStringAsFixed(2));
+      // Write to file.
+      output.add(data);
+    }
+    await output.close();
+    log('Downloaded ${video.title}.${audio.container.name}');
+    filePath = file.path;
+
+    String fileUri = '$filePath';
+
+    log('Picked MP3 file path: $fileUri');
+    audioDuration = video.duration.toString().substring(2, 7);
+    log('================ audio type ${audio.codec.change(subtype: 'mp3')}');
+  }
 
   getdata() {
     GlobalVar.user?.token != CachHelper.getData(key: 'token');

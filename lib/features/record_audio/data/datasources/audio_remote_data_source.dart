@@ -45,7 +45,7 @@ class AudioRemoteDataSourceImpl extends AudioRemoteDataSource {
 
   @override
   Future<String> summarizeText(text) async {
-    String apiKey = 'AIzaSyDpZ836eB4cL7ut7secaH34aGyvNDATWVk';
+    String apiKey = 'AIzaSyAZ9fB6JQB_FyuuQtaatHaGDFIRhMBaWDY';
     final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
 
     String prompt = '$text summarize this';
@@ -56,7 +56,7 @@ class AudioRemoteDataSourceImpl extends AudioRemoteDataSource {
 
   @override
   Future<String> translateText(text) async {
-    String apiKey = 'AIzaSyDpZ836eB4cL7ut7secaH34aGyvNDATWVk';
+    String apiKey = 'AIzaSyAZ9fB6JQB_FyuuQtaatHaGDFIRhMBaWDY';
     final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
 
     String prompt = '$text translate this to arabic';

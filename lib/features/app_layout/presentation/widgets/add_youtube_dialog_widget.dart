@@ -126,39 +126,60 @@ class YoutubeDialog extends StatelessWidget {
                 width: double.infinity,
                 onTap: () async {
                   if (key.currentState?.validate() == true) {
-                    AudioModel audioModel = AudioModel(
-                      audioUrl: urlController.text ?? '',
-                      title: namecontroller.text,
-                      transcriptionText: '',
-                      createdAt: DateTime.now(),
-                      duration: '00:00',
-                      audioName: namecontroller.text +
-                          DateTime.now().millisecondsSinceEpoch.toString(),
-                      status: FileStatus.trancripting,
-                    );
-                    cubit.audios.add(audioModel);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                    cubit
+                        .download(urlController.text, context)
+                        .whenComplete(() async {
+                      AudioModel audioModel = AudioModel(
+                        audioUrl: cubit.filePath!,
+                        title: namecontroller.text,
+                        transcriptionText: '',
+                        createdAt: DateTime.now(),
+                        duration: cubit.audioDuration!,
+                        audioName: namecontroller.text +
+                            DateTime.now().millisecondsSinceEpoch.toString(),
+                        status: FileStatus.trancripting,
+                      );
+                      cubit.audios.add(audioModel);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
 
-                    await cubit
-                        .transcripeYoutubeVideo(
-                            urlController.text, audioModel.audioName)
-                        .whenComplete(() {
-                      audioModel.transcriptionText =
-                          cubit.data!['paragraphs']['transcript'];
-                      audioModel.paragraphs = cubit.paragraphs;
-                      audioModel.topics = cubit.topics;
-
-                      log(audioModel.toString());
-                      cubit.uploadYouTubeFile(audioModel: audioModel);
-
-                      namecontroller.clear();
-                      cubit.filePath = '';
-                      cubit.transcriptionText = '';
-                      cubit.audioDuration = '';
+                      await cubit
+                          .transcriptFile(cubit.filePath, audioModel.audioName)
+                          .whenComplete(() {
+                        audioModel.transcriptionText =
+                            cubit.transcriptionText ?? '';
+                        audioModel.paragraphs = cubit.paragraphs;
+                        audioModel.topics = cubit.topics;
+                        log(audioModel.topics!.length.toString());
+                        log(audioModel.paragraphs!.length.toString());
+                        cubit.uploadFile(audioModel: audioModel);
+                        namecontroller.clear();
+                        cubit.filePath = '';
+                        cubit.transcriptionText = '';
+                        cubit.audioDuration = '';
+                      });
                     });
                   }
-                })
+                }),
+            10.h.sizedBoxHeight,
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '* ',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(color: AppColor.redColor),
+                  ),
+                  Text(
+                    'Audio must not be exceed 2 minutes.',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
           ],
         );
       },
