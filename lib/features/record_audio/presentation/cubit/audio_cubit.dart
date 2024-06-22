@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/record_audio/domain/usecases/audio_usecase.dart';
 import 'package:sum_cap/features/record_audio/presentation/pages/record_details.dart';
+import 'package:sum_cap/features/record_audio/presentation/pages/summarization.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/translate_text.dart';
 
 import '../../../../dependcy_injection.dart';
@@ -114,12 +115,20 @@ class AudioCubit extends Cubit<AudioState> {
       emit(SummarizeAudioErrorState(l.toString()));
     }, (r) {
       emit(SummarizeAudioSuccessState(r));
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return DialogWidget(r);
-        },
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SummarizationScreens(
+            SummaryText: r,
+          ),
+        ),
       );
+      // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return DialogWidget(r);
+      //   },
+      // );
     });
   }
 

@@ -7,6 +7,8 @@ import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.
 import 'package:sum_cap/features/app_layout/presentation/pages/app_layout.dart';
 import 'package:sum_cap/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:sum_cap/features/auth/presentation/pages/login_screen.dart';
+import 'package:sum_cap/features/live_transcript/presentation/cubit/live_transcript_cubit.dart';
+import 'package:sum_cap/features/live_transcript/presentation/pages/live_transcript.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_record_cubit/audio_recoed_cubit.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/chatbot_cubit/chatbot_cubit.dart';
@@ -33,6 +35,7 @@ class MainApp extends StatelessWidget {
           BlocProvider(create: (_) => AudioCubit()),
           BlocProvider(create: (_) => AudioRecoedCubit()),
           BlocProvider(create: (_) => ChatBotCubit()),
+          BlocProvider(create: (_) => LiveTranscriptCubit()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

@@ -108,55 +108,70 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
   List<Paragraph> paragraphs = [];
 
 //!!!!!!!!!!!!!!!!!!!!!!    هي دي يا علاء
-  transcriptFile(filepath, title) async {
-    emit(TranscriptionLoadingState(fileName: title));
-    // try {
-    Map<String, dynamic> params = {
-      'model': 'whisper-medium',
-      'detect_language': true,
-      'detect_topics': true,
-      'smart_format': true,
-      'punctuate': true,
-      'paragraphs': true,
-      'diarize': true,
-    };
-    Deepgram deepgram =
-        Deepgram(ApiModelConstatnts.deepGramApiKey, baseQueryParams: params);
-    DeepgramSttResult text = await deepgram.transcribeFromFile(
-      File(filepath),
-    );
-    log('file path: $filepath');
-    data = text.map;
-    transcriptionText = data!['results']['channels'][0]['alternatives'][0]
-        ['paragraphs']['transcript'];
-    // log('data : $data');
-    // log(data!['results']['channels'][0]['alternatives'][0]['paragraphs']
-    //     ['transcript']);
+  transcriptFile(filepath, title, {bool isArabic = false}) async {
+    emit(TranscriptionLoadingState(
+      fileName: title,
+    ));
+    try {
+      Map<String, dynamic> params = isArabic
+          ? {
+              'model': 'whisper-large',
+              'detect_language': true,
+              'punctuate': true,
+              "utterances": true,
+              "utt_split": 1,
+              'diarize': true,
+            }
+          : {
+              'model': 'whisper-large',
+              'detect_language': true,
+              'detect_topics': true,
+              'smart_format': true,
+              'punctuate': true,
+              "utterances": true,
+              "utt_split": 1,
+              'paragraphs': true,
+              'diarize': true,
+            };
+      Deepgram deepgram =
+          Deepgram(ApiModelConstatnts.deepGramApiKey, baseQueryParams: params);
+      DeepgramSttResult text = await deepgram.transcribeFromFile(
+        File(filepath),
+      );
+      log('file path: $filepath');
 
-    for (Map<String, dynamic> x
-        in data!['results']['channels'][0]['alternatives'][0]['topics'] ?? []) {
-      Topic n = Topic.fromJson(x);
-      topics.add(n);
+      data = text.map;
+      log(text.transcript);
+      transcriptionText = isArabic
+          ? text.transcript
+          : data!['results']['channels'][0]['alternatives'][0]['paragraphs']
+                  ['transcript'] ??
+              '';
+
+      if (!isArabic) {
+        for (Map<String, dynamic> x in data!['results']['channels'][0]
+                ['alternatives'][0]['topics'] ??
+            []) {
+          Topic n = Topic.fromJson(x);
+          topics.add(n);
+        }
+
+        for (Map<String, dynamic> x in data!['results']['channels'][0]
+                ['alternatives'][0]['paragraphs']['paragraphs'] ??
+            []) {
+          Paragraph n = Paragraph.fromJson(x);
+          paragraphs.add(n);
+        }
+      }
+      emit(TranscriptionSuccessState(
+          fileName: title, message: 'Transcripted Successfully'));
+    } catch (e) {
+      log(e.toString());
+      emit(TranscriptionErrorState(error: e.toString(), fileName: title));
     }
-    log('Topics: $topics');
-    log('topics length: ${topics.length}');
-
-    for (Map<String, dynamic> x in data!['results']['channels'][0]
-            ['alternatives'][0]['paragraphs']['paragraphs'] ??
-        []) {
-      Paragraph n = Paragraph.fromJson(x);
-      paragraphs.add(n);
-    }
-
-    emit(TranscriptionSuccessState(
-        fileName: title, message: 'Transcripted Successfully'));
-    // } catch (e) {
-    //   log(e.toString());
-    //   emit(TranscriptionErrorState(error: e.toString(), fileName: title));
-    // }
   }
 
-  Future<void> transcripeFile(filePath, title) async {
+  Future<void> transcriptFileWithAPI(filePath, title) async {
     emit(TranscriptionLoadingState(
       fileName: title,
     ));
@@ -185,37 +200,6 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
       emit(TranscriptionSuccessState(
           message: 'Transcripted Successfully', fileName: title));
     });
-  }
-
-  Future<void> transcripeYoutubeVideo(filePath, title) async {
-    // emit(TranscriptionLoadingState(
-    //   fileName: title,
-    // ));
-    // var response = await _usecases.transcriptYoutubeVideo(filePath: filePath);
-    // response.fold((l) {
-    //   log(l.toString());
-    //   emit(TranscriptionErrorState(
-    //       fileName: title, error: 'Error When Transcripting'));
-    // }, (r) {
-    //   log(r.toString());
-    //   data = r;
-    //   transcriptionText = r['paragraphs']['transcript'];
-    //   log('topics : ${r['topics']}');
-    //   log('Total paragraphs : ${r['paragraphs']}');
-    //   log('paragraphs : ${r['paragraphs']['paragraphs']}');
-
-    //   for (Map<String, dynamic> x in r['topics']) {
-    //     Topic n = Topic.fromJson(x);
-    //     topics.add(n);
-    //   }
-    //   for (Map<String, dynamic> x in r['paragraphs']['paragraphs']) {
-    //     Paragraph n = Paragraph.fromJson(x);
-    //     paragraphs.add(n);
-    //   }
-
-    //   emit(TranscriptionSuccessState(
-    //       message: 'Transcripted Successfully', fileName: title));
-    // });
   }
 
   //!Upload File
@@ -297,7 +281,7 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
         .replaceAll('|', '');
     final appDir = Directory('/storage/emulated/0/Download');
     final file = File(
-        '${'${appDir!.path}/$fileName'.replaceAll('.webm', '').replaceAll('.mp4', '')}.mp3');
+        '${'${appDir.path}/$fileName'.replaceAll('.webm', '').replaceAll('.mp4', '')}.mp3');
     log(file.path);
     // Delete the file if exists.
     if (file.existsSync()) {

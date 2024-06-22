@@ -186,7 +186,12 @@ class LoginScreen extends StatelessWidget {
               title: 'Login Success',
               contentType: ContentType.success);
           AppLayoutCubit.get(context).getAudios();
-          context.jumpToWithReplacement(const AppLayout());
+          AppLayoutCubit.get(context).selectedIndex = 0;
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const AppLayout()),
+            (route) => false,
+          );
         }
       },
     );

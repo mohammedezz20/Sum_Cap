@@ -130,7 +130,7 @@ class YoutubeDialog extends StatelessWidget {
                         .download(urlController.text, context)
                         .whenComplete(() async {
                       AudioModel audioModel = AudioModel(
-                        audioUrl: cubit.filePath!,
+                        audioUrl: cubit.filePath ?? '',
                         title: namecontroller.text,
                         transcriptionText: '',
                         createdAt: DateTime.now(),
