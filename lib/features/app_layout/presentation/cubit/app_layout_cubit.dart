@@ -106,6 +106,7 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
   Map<String, dynamic>? data;
   List<Topic> topics = [];
   List<Paragraph> paragraphs = [];
+  bool isArabic = false;
 
 //!!!!!!!!!!!!!!!!!!!!!!    هي دي يا علاء
   transcriptFile(filepath, title, {bool isArabic = false}) async {
@@ -165,6 +166,7 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
       }
       emit(TranscriptionSuccessState(
           fileName: title, message: 'Transcripted Successfully'));
+      isArabic = false;
     } catch (e) {
       log(e.toString());
       emit(TranscriptionErrorState(error: e.toString(), fileName: title));

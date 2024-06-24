@@ -11,9 +11,14 @@ import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_states
 
 import '../../../../config/themes/colors.dart';
 
-class CustomDialogWidget extends StatelessWidget {
+class CustomDialogWidget extends StatefulWidget {
   const CustomDialogWidget({super.key});
 
+  @override
+  State<CustomDialogWidget> createState() => _CustomDialogWidgetState();
+}
+
+class _CustomDialogWidgetState extends State<CustomDialogWidget> {
   @override
   Widget build(BuildContext context) {
     var cubit = AppLayoutCubit.get(context);
@@ -89,7 +94,8 @@ class CustomDialogWidget extends StatelessWidget {
                     Navigator.pop(context);
 
                     await cubit
-                        .transcriptFile(cubit.filePath, audioModel.audioName)
+                        .transcriptFile(cubit.filePath, audioModel.audioName,
+                            isArabic: cubit.isArabic)
                         .whenComplete(() {
                       audioModel.transcriptionText =
                           cubit.transcriptionText ?? '';
@@ -106,7 +112,24 @@ class CustomDialogWidget extends StatelessWidget {
                       cubit.audioDuration = '';
                     });
                   }
-                })
+                }),
+            ListTile(
+              title: Text(
+                'Transcript Language',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              trailing: Switch(
+                inactiveThumbColor: const Color(0xffffffff),
+                activeTrackColor: const Color(0xff335ef7),
+                inactiveTrackColor: const Color(0xffeeeeee),
+                value: cubit.isArabic,
+                onChanged: (value) {
+                  cubit.isArabic = value;
+                  print(cubit.isArabic);
+                  setState(() {});
+                },
+              ),
+            ),
           ],
         );
       },

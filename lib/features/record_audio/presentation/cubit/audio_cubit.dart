@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/record_audio/domain/usecases/audio_usecase.dart';
 import 'package:sum_cap/features/record_audio/presentation/pages/record_details.dart';
@@ -147,5 +148,16 @@ class AudioCubit extends Cubit<AudioState> {
     _position = newPosition;
 
     emit(ChangePosition());
+  }
+
+  Future<bool> isEnglish(String text) async {
+    await langdetect.initLangDetect();
+    final language = langdetect.detect(text);
+    print('Detected language: $language'); //
+    if (language == 'en') {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -21,8 +21,9 @@ import 'package:sum_cap/features/record_audio/presentation/widgets/play_audio_fi
 
 class RecordDetails extends StatefulWidget {
   AudioModel audio;
+  bool isEnglish;
 
-  RecordDetails(this.audio, {super.key});
+  RecordDetails(this.audio, this.isEnglish, {super.key});
 
   @override
   State<RecordDetails> createState() => _RecordDetailsState();
@@ -122,7 +123,7 @@ class _RecordDetailsState extends State<RecordDetails> {
                         ),
                         5.h.sizedBoxHeight,
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Row(
                               children: [
@@ -140,7 +141,7 @@ class _RecordDetailsState extends State<RecordDetails> {
                                           color: AppColor.greyColor,
                                           fontSize: 14.sp),
                                 ),
-                                20.w.sizedBoxWidth,
+                                10.w.sizedBoxWidth,
                                 Text(
                                   DateFormat('hh:mm a').format(
                                     widget.audio.createdAt.toUtc().add(
@@ -219,43 +220,100 @@ class _RecordDetailsState extends State<RecordDetails> {
                                 width: 65.w,
                                 height: 36.h,
                               ),
-                              20.w.sizedBoxWidth,
-                              (state is SummarizeAudioLoadingState)
-                                  ? const Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppColor.primaryColor,
-                                      ),
+                              15.w.sizedBoxWidth,
+                              widget.isEnglish
+                                  ? Row(
+                                      children: [
+                                        (state is SummarizeAudioLoadingState)
+                                            ? const Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color: AppColor.primaryColor,
+                                                ),
+                                              )
+                                            : OptionButton(
+                                                buttonText: 'Summary',
+                                                icon: FontAwesomeIcons
+                                                    .wandMagicSparkles,
+                                                onTap: () {
+                                                  cubit.summarizeText(
+                                                      widget.audio
+                                                          .transcriptionText,
+                                                      context);
+                                                },
+                                                width: 93.w,
+                                                height: 36.h,
+                                              ),
+                                        15.w.sizedBoxWidth,
+                                        (state is TranslateAudioLoadingState)
+                                            ? const Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  color: AppColor.primaryColor,
+                                                ),
+                                              )
+                                            : OptionButton(
+                                                buttonText: 'Translate',
+                                                icon: FontAwesomeIcons.language,
+                                                onTap: () {
+                                                  cubit.translateText(
+                                                      widget.audio
+                                                          .transcriptionText,
+                                                      context);
+                                                },
+                                                width: 87.w,
+                                                height: 36.h,
+                                              ),
+                                        15.w.sizedBoxWidth,
+                                      ],
                                     )
-                                  : OptionButton(
-                                      buttonText: 'Summary',
-                                      icon: FontAwesomeIcons.wandMagicSparkles,
-                                      onTap: () {
-                                        cubit.summarizeText(
-                                            widget.audio.transcriptionText,
-                                            context);
-                                      },
-                                      width: 93.w,
-                                      height: 36.h,
-                                    ),
-                              20.w.sizedBoxWidth,
-                              (state is TranslateAudioLoadingState)
-                                  ? const Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppColor.primaryColor,
+                                  : Container(),
+                              if (widget.audio.topics!.isNotEmpty &&
+                                  widget.isEnglish == true) ...[
+                                OptionButton(
+                                  buttonText: 'Topics',
+                                  icon: FontAwesomeIcons.layerGroup,
+                                  onTap: () {
+                                    var newaudioModel = widget.audio;
+                                    List<Topic> topic = [];
+                                    for (var element in widget.audio.topics!) {
+                                      if (element.topics.isNotEmpty) {
+                                        topic.add(element);
+                                      }
+                                    }
+                                    newaudioModel.topics = topic;
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AudioTopic(
+                                          audioModel: newaudioModel,
+                                        ),
                                       ),
-                                    )
-                                  : OptionButton(
-                                      buttonText: 'Translate',
-                                      icon: FontAwesomeIcons.language,
-                                      onTap: () {
-                                        cubit.translateText(
+                                    );
+                                  },
+                                  width: 75.w,
+                                  height: 36.h,
+                                ),
+                                15.w.sizedBoxWidth,
+                              ],
+                              OptionButton(
+                                buttonText: ' ChatBot',
+                                icon: FontAwesomeIcons.robot,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatBotScreen(
+                                        transcriptionText:
                                             widget.audio.transcriptionText,
-                                            context);
-                                      },
-                                      width: 87.w,
-                                      height: 36.h,
+                                      ),
                                     ),
-                              20.w.sizedBoxWidth,
+                                  );
+                                },
+                                width: 90.w,
+                                height: 36.h,
+                              ),
+                              15.w.sizedBoxWidth,
                               OptionButton(
                                 buttonText: 'Copy',
                                 icon: FontAwesomeIcons.copy,
@@ -270,51 +328,10 @@ class _RecordDetailsState extends State<RecordDetails> {
                                 width: 65.w,
                                 height: 36.h,
                               ),
-                              20.w.sizedBoxWidth,
-                              if (widget.audio.topics!.isNotEmpty) ...[
-                                OptionButton(
-                                  buttonText: 'Topics',
-                                  icon: FontAwesomeIcons.layerGroup,
-                                  onTap: () {
-                                    var newaudioModel = widget.audio;
-                                    List<Topic> topic = [];
-                                    for (var element in widget.audio.topics!) {
-                                      if (element.topics.isNotEmpty) {
-                                        topic.add(element);
-                                      }
-                                    }
-                                    newaudioModel.topics = topic;
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => AudioTopic(
-                                                  audioModel: newaudioModel,
-                                                )));
-                                  },
-                                  width: 75.w,
-                                  height: 36.h,
-                                ),
-                                20.w.sizedBoxWidth,
-                              ],
-                              OptionButton(
-                                buttonText: ' ChatBot',
-                                icon: FontAwesomeIcons.robot,
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ChatBotScreen(
-                                                transcriptionText: widget
-                                                    .audio.transcriptionText,
-                                              )));
-                                },
-                                width: 90.w,
-                                height: 36.h,
-                              ),
                             ],
                           ),
                         ),
-                        20.h.sizedBoxHeight,
+                        10.h.sizedBoxHeight,
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.w),
                           child: SingleChildScrollView(
@@ -360,6 +377,7 @@ class _RecordDetailsState extends State<RecordDetails> {
                             ),
                           ),
                         ),
+                        10.h.sizedBoxHeight,
                         play_audio_file.AdvancedAudioPlayer(
                           audioModel: widget.audio,
                         )

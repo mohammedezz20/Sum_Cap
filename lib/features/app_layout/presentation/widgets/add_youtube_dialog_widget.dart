@@ -12,9 +12,14 @@ import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_states
 
 import '../../../../config/themes/colors.dart';
 
-class YoutubeDialog extends StatelessWidget {
+class YoutubeDialog extends StatefulWidget {
   const YoutubeDialog({super.key});
 
+  @override
+  State<YoutubeDialog> createState() => _YoutubeDialogState();
+}
+
+class _YoutubeDialogState extends State<YoutubeDialog> {
   @override
   Widget build(BuildContext context) {
     var cubit = AppLayoutCubit.get(context);
@@ -144,7 +149,8 @@ class YoutubeDialog extends StatelessWidget {
                       Navigator.pop(context);
 
                       await cubit
-                          .transcriptFile(cubit.filePath, audioModel.audioName)
+                          .transcriptFile(cubit.filePath, audioModel.audioName,
+                              isArabic: cubit.isArabic)
                           .whenComplete(() {
                         audioModel.transcriptionText =
                             cubit.transcriptionText ?? '';
@@ -161,6 +167,24 @@ class YoutubeDialog extends StatelessWidget {
                     });
                   }
                 }),
+            10.h.sizedBoxHeight,
+            ListTile(
+              title: Text(
+                'Transcript Language',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              trailing: Switch(
+                inactiveThumbColor: const Color(0xffffffff),
+                activeTrackColor: const Color(0xff335ef7),
+                inactiveTrackColor: const Color(0xffeeeeee),
+                value: cubit.isArabic,
+                onChanged: (value) {
+                  cubit.isArabic = value;
+                  print(cubit.isArabic);
+                  setState(() {});
+                },
+              ),
+            ),
             10.h.sizedBoxHeight,
             Center(
               child: Row(

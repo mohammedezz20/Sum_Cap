@@ -76,7 +76,7 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 480.h,
+                  height: 440.h,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

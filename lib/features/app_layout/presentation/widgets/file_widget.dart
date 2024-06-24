@@ -20,6 +20,7 @@ class FileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String targetTimeZone = "Africa/Cairo";
+    bool isEnglish = true;
 
     var time =
         "${audio.createdAt.hour}:${audio.createdAt.minute}:${audio.createdAt.second}";
@@ -62,9 +63,10 @@ class FileWidget extends StatelessWidget {
               AudioCubit.get(context).nameController.text = audio.title;
               AudioCubit.get(context).transcriptionController.text =
                   audio.transcriptionText;
-
+              isEnglish = await AudioCubit.get(context)
+                  .isEnglish(audio.transcriptionText);
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return RecordDetails(audio);
+                return RecordDetails(audio, isEnglish);
               }));
             }
           },

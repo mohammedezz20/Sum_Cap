@@ -4,8 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_linux
-  file_selector_linux
-  human_avatar
   record_linux
   url_launcher_linux
 )
