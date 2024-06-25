@@ -12,7 +12,7 @@ abstract class AudioRemoteDataSource {
   Future<http.Response> updateAudio(AudioModel audioModel);
 
   Future<String> translateText(String text);
-  Future<String> summarizeText(String text);
+  Future<String> summarizeText(String text, isArabic);
 }
 
 class AudioRemoteDataSourceImpl extends AudioRemoteDataSource {
@@ -44,11 +44,12 @@ class AudioRemoteDataSourceImpl extends AudioRemoteDataSource {
   }
 
   @override
-  Future<String> summarizeText(text) async {
+  Future<String> summarizeText(text, isArabic) async {
     String apiKey = 'AIzaSyAZ9fB6JQB_FyuuQtaatHaGDFIRhMBaWDY';
     final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
 
-    String prompt = '$text summarize this';
+    String prompt =
+        isArabic ? '$text summarize this in arabic' : '$text summarize this';
     final content = [Content.text(prompt)];
     final response = await model.generateContent(content);
     return response.text!;

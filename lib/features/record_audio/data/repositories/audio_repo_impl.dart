@@ -31,9 +31,10 @@ class AudioRepoImpl extends AudioRepo {
   }
 
   @override
-  Future<Either<Failure, String>> summarizeText(String text) async {
+  Future<Either<Failure, String>> summarizeText(
+      String text, bool isArabic) async {
     try {
-      var response = await _api.summarizeText(text);
+      var response = await _api.summarizeText(text, isArabic);
       return Right(response);
     } catch (e) {
       return Left(SystemFailure(message: e.toString()));

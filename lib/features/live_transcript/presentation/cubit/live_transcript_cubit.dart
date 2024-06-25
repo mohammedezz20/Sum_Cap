@@ -3,11 +3,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:deepgram_speech_to_text/deepgram_speech_to_text.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:record/record.dart';
 import 'package:sound_stream/sound_stream.dart';
 import 'package:sum_cap/core/utils/api_constants.dart';
 import 'package:sum_cap/features/live_transcript/presentation/cubit/live_transcript_state.dart';
@@ -59,7 +56,9 @@ class LiveTranscriptCubit extends Cubit<TranscriptionState> {
   void stopRecording() async {
     await _recorder.stop();
     channel.sink.close(status.goingAway);
-    resetText(newText: "  speak slowly and clearly");
+    // resetText(
+    //     newText:
+    //         'For a high-quality transcription, please \n \t\t\t\t\t\t\t\t speak slowly and clearly');
     emit(TranscriptionStopped(state.transcript));
   }
 

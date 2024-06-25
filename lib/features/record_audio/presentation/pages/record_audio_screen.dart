@@ -25,10 +25,19 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColor.whiteColor,
+      color: AppColor.offWhiteColor,
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
+            title: const Text(
+              'Record Audio',
+              style: TextStyle(
+                color: AppColor.blackColor,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            backgroundColor: AppColor.offWhiteColor,
             leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -58,10 +67,14 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
                     decoration: const InputDecoration(
                       hintText: 'New Recording',
                       border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
+                      focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: AppColor.primaryColor,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: AppColor.blackColor,
                         ),
                       ),
                       disabledBorder: OutlineInputBorder(),

@@ -17,8 +17,9 @@ class AudioUseCase {
     return await _repo.updateAudio(audioModel);
   }
 
-  Future<Either<Failure, String>> summarizeText(String text) async {
-    return await _repo.summarizeText(text);
+  Future<Either<Failure, String>> summarizeText(
+      String text, bool isArabic) async {
+    return await _repo.summarizeText(text, isArabic);
   }
 
   Future<Either<Failure, String>> translateText(String text) async {

@@ -107,6 +107,10 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
   List<Topic> topics = [];
   List<Paragraph> paragraphs = [];
   bool isArabic = false;
+  changeLang(val) {
+    isArabic = val;
+    emit(ChangeLangState());
+  }
 
 //!!!!!!!!!!!!!!!!!!!!!!    هي دي يا علاء
   transcriptFile(filepath, title, {bool isArabic = false}) async {

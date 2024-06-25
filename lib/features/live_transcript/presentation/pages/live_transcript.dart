@@ -6,6 +6,8 @@ import 'package:sum_cap/core/widgets/custom_button.dart';
 import 'package:sum_cap/features/live_transcript/presentation/cubit/live_transcript_cubit.dart';
 import 'package:sum_cap/features/live_transcript/presentation/cubit/live_transcript_state.dart';
 
+import '../../../../core/utils/assets_manager.dart';
+
 class LiveTranscriptView extends StatelessWidget {
   const LiveTranscriptView({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -15,7 +17,9 @@ class LiveTranscriptView extends StatelessWidget {
     //todo: add audio to database
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: AppColor.offWhiteColor,
         appBar: AppBar(
+          backgroundColor: AppColor.offWhiteColor,
           title: Text(title),
         ),
         body: BlocBuilder<LiveTranscriptCubit, TranscriptionState>(
@@ -29,14 +33,54 @@ class LiveTranscriptView extends StatelessWidget {
                       Expanded(
                         child: SizedBox(
                           width: 150,
-                          child: Text(
-                            state.transcript,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 50,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15),
-                          ),
+                          child: (state.transcript !=
+                                  'For a high-quality transcription, please \n \t\t\t\t\t\t\t\t speak slowly and clearly')
+                              ? Text(
+                                  state.transcript,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 50,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      state.transcript,
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 50,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                    ),
+                                    Image.asset(Assets.recordScreen),
+                                    const Text.rich(
+                                      TextSpan(children: [
+                                        TextSpan(
+                                            text: " * ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
+                                                color: Colors.red)),
+                                        TextSpan(
+                                            text:
+                                                "Live Transcript is only available for english",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 15)),
+                                      ]),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 50,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                    ),
+                                  ],
+                                ),
                         ),
                       ),
                     ],

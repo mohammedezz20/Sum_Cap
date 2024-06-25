@@ -61,3 +61,5 @@ class TranscriptionErrorState extends AppLayoutStates {
   String error;
   TranscriptionErrorState({required this.fileName, required this.error});
 }
+
+class ChangeLangState extends AppLayoutStates {}

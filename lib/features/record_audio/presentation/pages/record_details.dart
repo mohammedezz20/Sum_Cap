@@ -46,15 +46,23 @@ class _RecordDetailsState extends State<RecordDetails> {
         listener: (context, state) {},
         builder: (context, state) {
           return Container(
-            color: AppColor.whiteColor,
+            color: AppColor.offWhiteColor,
             child: SafeArea(
               child: Scaffold(
                 appBar: AppBar(
+                  backgroundColor: AppColor.offWhiteColor,
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back_ios),
                     onPressed: () {
                       Navigator.pop(context);
                     },
+                  ),
+                  title: Text(
+                    "Audio Details",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(color: AppColor.blackColor),
                   ),
                   actions: [
                     CupertinoButton(
@@ -221,30 +229,27 @@ class _RecordDetailsState extends State<RecordDetails> {
                                 height: 36.h,
                               ),
                               15.w.sizedBoxWidth,
+                              (state is SummarizeAudioLoadingState)
+                                  ? const Center(
+                                      child: CircularProgressIndicator(
+                                        color: AppColor.primaryColor,
+                                      ),
+                                    )
+                                  : OptionButton(
+                                      buttonText: 'Summary',
+                                      icon: FontAwesomeIcons.wandMagicSparkles,
+                                      onTap: () {
+                                        cubit.summarizeText(
+                                            widget.audio.transcriptionText,
+                                            context);
+                                      },
+                                      width: 93.w,
+                                      height: 36.h,
+                                    ),
+                              15.w.sizedBoxWidth,
                               widget.isEnglish
                                   ? Row(
                                       children: [
-                                        (state is SummarizeAudioLoadingState)
-                                            ? const Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  color: AppColor.primaryColor,
-                                                ),
-                                              )
-                                            : OptionButton(
-                                                buttonText: 'Summary',
-                                                icon: FontAwesomeIcons
-                                                    .wandMagicSparkles,
-                                                onTap: () {
-                                                  cubit.summarizeText(
-                                                      widget.audio
-                                                          .transcriptionText,
-                                                      context);
-                                                },
-                                                width: 93.w,
-                                                height: 36.h,
-                                              ),
-                                        15.w.sizedBoxWidth,
                                         (state is TranslateAudioLoadingState)
                                             ? const Center(
                                                 child:

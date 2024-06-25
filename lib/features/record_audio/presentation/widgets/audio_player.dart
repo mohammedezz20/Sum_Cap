@@ -43,7 +43,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
           return Container(
             alignment: Alignment.center,
             height: 220.h,
-            color: AppColor.whiteColor,
+            color: AppColor.offWhiteColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -157,7 +157,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                 ),
                 ListTile(
                   title: Text(
-                    'Transcript Language',
+                    'Transcript Language (${cubit.isArabic ? 'Arabic' : 'English'})',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   trailing: Switch(

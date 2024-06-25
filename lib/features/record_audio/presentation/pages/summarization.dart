@@ -5,14 +5,17 @@ import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 
 class SummarizationScreens extends StatefulWidget {
-  SummarizationScreens({super.key, required this.SummaryText});
+  SummarizationScreens(
+      {super.key, required this.SummaryText, required this.isArabic});
   String SummaryText;
+  bool isArabic;
   @override
   State<SummarizationScreens> createState() => _SummarizationScreensState();
 }
 
 class _SummarizationScreensState extends State<SummarizationScreens> {
   final FlutterTts _flutterTts = FlutterTts();
+
   bool isPaused = true;
   List<Map> _voices = [];
   Map? _currentVoice;
@@ -36,8 +39,9 @@ class _SummarizationScreensState extends State<SummarizationScreens> {
       try {
         List<Map> voices = List<Map>.from(data);
         setState(() {
-          _voices =
-              voices.where((voice) => voice["name"].contains("en")).toList();
+          _voices = (widget.isArabic)
+              ? voices.where((voice) => voice["name"].contains("ar")).toList()
+              : voices.where((voice) => voice["name"].contains("en")).toList();
           _currentVoice = _voices.first;
           setVoice(_currentVoice!);
         });
@@ -114,7 +118,8 @@ class _SummarizationScreensState extends State<SummarizationScreens> {
                       IconButton(
                         onPressed: () {
                           if (isPaused == true) {
-                            _flutterTts.speak(widget.SummaryText);
+                            _flutterTts.speak(widget.SummaryText.substring(
+                                _currentWordStart ?? 0));
                             isPaused = false;
                             setState(() {});
                           } else {
@@ -191,8 +196,8 @@ class _SummarizationScreensState extends State<SummarizationScreens> {
                           text: widget.SummaryText.substring(
                               _currentWordStart!, _currentWordEnd),
                           style: const TextStyle(
-                            color: Colors.white,
-                            backgroundColor: Colors.purpleAccent,
+                            color: Colors.black,
+                            backgroundColor: AppColor.greyColor,
                           ),
                         ),
                       if (_currentWordEnd != null)

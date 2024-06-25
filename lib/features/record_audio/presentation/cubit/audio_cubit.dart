@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/record_audio/domain/usecases/audio_usecase.dart';
 import 'package:sum_cap/features/record_audio/presentation/pages/record_details.dart';
@@ -111,7 +110,8 @@ class AudioCubit extends Cubit<AudioState> {
 
   summarizeText(String transcriptionText, context) async {
     emit(SummarizeAudioLoadingState());
-    var response = await _useCase.summarizeText(transcriptionText);
+    var response = await _useCase.summarizeText(
+        transcriptionText, !isEnglish(transcriptionText));
     response.fold((l) {
       emit(SummarizeAudioErrorState(l.toString()));
     }, (r) {
@@ -121,6 +121,7 @@ class AudioCubit extends Cubit<AudioState> {
         MaterialPageRoute(
           builder: (context) => SummarizationScreens(
             SummaryText: r,
+            isArabic: !isEnglish(r),
           ),
         ),
       );
@@ -150,14 +151,8 @@ class AudioCubit extends Cubit<AudioState> {
     emit(ChangePosition());
   }
 
-  Future<bool> isEnglish(String text) async {
-    await langdetect.initLangDetect();
-    final language = langdetect.detect(text);
-    print('Detected language: $language'); //
-    if (language == 'en') {
-      return true;
-    } else {
-      return false;
-    }
+  bool isEnglish(String text) {
+    final englishRegExp = RegExp(r'[A-Za-z]');
+    return englishRegExp.hasMatch(text);
   }
 }
