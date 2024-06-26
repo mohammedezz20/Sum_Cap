@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sum_cap/config/themes/colors.dart';
@@ -6,6 +7,7 @@ import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/core/widgets/custom_button.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_cubit.dart';
 import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_states.dart';
+import 'package:sum_cap/features/app_layout/presentation/widgets/dialog_widget.dart';
 import 'package:sum_cap/features/app_layout/presentation/widgets/file_shimmer_widget.dart';
 import 'package:sum_cap/features/app_layout/presentation/widgets/file_widget.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
@@ -20,6 +22,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  static const platform = MethodChannel("com.example.sum_cap/intent");
+
+  @override
+  void initState() {
+    super.initState();
+    platform.setMethodCallHandler((call) async {
+      if (call.method == 'receiveAudio') {
+        final String audioPath = call.arguments;
+        _handleSharedAudio(audioPath);
+      }
+    });
+  }
+
+  void _handleSharedAudio(String audioPath) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (context) => CustomDialogWidget(audioPath: audioPath),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var cubit = AppLayoutCubit.get(context);

@@ -5,9 +5,11 @@ import 'dart:io';
 import 'package:deepgram_speech_to_text/deepgram_speech_to_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:path/path.dart';
 import 'package:sum_cap/core/utils/api_constants.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/app_layout/domain/usecases/app_layout_use_case.dart';
@@ -87,7 +89,9 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
         showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const CustomDialogWidget();
+            return CustomDialogWidget(
+              audioPath: filePath ?? '',
+            );
           },
         );
         emit(PickAudioSuccessState());
@@ -334,5 +338,26 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
     GlobalVar.user?.username != CachHelper.getData(key: 'username');
     GlobalVar.user?.email != CachHelper.getData(key: 'email');
     GlobalVar.user?.password != CachHelper.getData(key: 'password');
+  }
+
+  static const platform = MethodChannel("com.example.sum_cap/intent");
+
+  @override
+  void checkAudioReceived(Context) {
+    platform.setMethodCallHandler((call) async {
+      if (call.method == 'receiveAudio') {
+        final String audioPath = call.arguments;
+        _handleSharedAudio(audioPath, context);
+      }
+    });
+  }
+
+  void _handleSharedAudio(String audioPath, context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (context) => CustomDialogWidget(audioPath: audioPath),
+      );
+    });
   }
 }
