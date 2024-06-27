@@ -63,3 +63,5 @@ class TranscriptionErrorState extends AppLayoutStates {
 }
 
 class ChangeLangState extends AppLayoutStates {}
+
+class CheckAudioReceivedState extends AppLayoutStates {}

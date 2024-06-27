@@ -12,36 +12,8 @@ import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/features/app_layout/presentation/widgets/dialog_widget.dart';
 
-class AppLayout extends StatefulWidget {
+class AppLayout extends StatelessWidget {
   const AppLayout({super.key});
-
-  @override
-  State<AppLayout> createState() => _AppLayoutState();
-}
-
-class _AppLayoutState extends State<AppLayout> {
-  static const platform = MethodChannel("com.example.sum_cap/intent");
-
-  @override
-  void initState() {
-    super.initState();
-    platform.setMethodCallHandler((call) async {
-      if (call.method == 'receiveAudio') {
-        log(call.arguments);
-        final String audioPath = call.arguments;
-        _handleSharedAudio(audioPath);
-      }
-    });
-  }
-
-  void _handleSharedAudio(String audioPath) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showDialog(
-        context: context,
-        builder: (context) => CustomDialogWidget(audioPath: audioPath),
-      );
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

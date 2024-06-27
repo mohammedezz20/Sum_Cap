@@ -1,4 +1,4 @@
-import 'package:sum_cap/core/cach_helper.dart';
+import 'package:sum_cap/core/shared_pref_helper.dart';
 
 class UserModel {
   String? id;
@@ -58,10 +58,10 @@ class UserModel {
   }
 
   Future<void> saveToCashe() async {
-    CachHelper.saveData(key: 'token', value: token);
-    CachHelper.saveData(key: 'id', value: id);
-    CachHelper.saveData(key: 'username', value: username);
-    CachHelper.saveData(key: 'email', value: email);
-    CachHelper.saveData(key: 'password', value: password);
+    SharedPrefHelper.saveData(key: 'token', value: token);
+    SharedPrefHelper.saveData(key: 'id', value: id);
+    SharedPrefHelper.saveData(key: 'username', value: username);
+    SharedPrefHelper.saveData(key: 'email', value: email);
+    SharedPrefHelper.saveData(key: 'password', value: password);
   }
 }

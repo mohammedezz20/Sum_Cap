@@ -28,7 +28,6 @@ class MainApp extends StatelessWidget {
           BlocProvider(create: (_) => AuthCubit()),
           BlocProvider(create: (_) {
             return AppLayoutCubit()
-              ..checkAudioReceived(context)
               ..getdata()
               ..getAudios();
           }),

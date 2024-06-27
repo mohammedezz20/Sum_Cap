@@ -23,7 +23,7 @@ class AuthLoginSuccessState extends AuthState {
   AuthLoginSuccessState(this.user) {
     GlobalVar.user = user;
     user.saveToCashe();
-    CachHelper.saveData(key: 'isLogin', value: true);
+    SharedPrefHelper.saveData(key: 'isLogin', value: true);
   }
 
   @override

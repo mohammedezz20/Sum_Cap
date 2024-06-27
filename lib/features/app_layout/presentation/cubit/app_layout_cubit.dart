@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -10,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path/path.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:sum_cap/core/utils/api_constants.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/app_layout/domain/usecases/app_layout_use_case.dart';
@@ -18,7 +20,7 @@ import 'package:sum_cap/features/app_layout/presentation/pages/home_screen.dart'
 import 'package:sum_cap/features/user_profile/presentation/pages/user_screen.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import '../../../../core/cach_helper.dart';
+import '../../../../core/shared_pref_helper.dart';
 import '../../../../core/global.dart';
 import '../../../../dependcy_injection.dart';
 import '../widgets/dialog_widget.dart';
@@ -333,31 +335,66 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
   }
 
   getdata() {
-    GlobalVar.user?.token != CachHelper.getData(key: 'token');
-    GlobalVar.user?.id != CachHelper.getData(key: 'id');
-    GlobalVar.user?.username != CachHelper.getData(key: 'username');
-    GlobalVar.user?.email != CachHelper.getData(key: 'email');
-    GlobalVar.user?.password != CachHelper.getData(key: 'password');
+    GlobalVar.user?.token != SharedPrefHelper.getData(key: 'token');
+    GlobalVar.user?.id != SharedPrefHelper.getData(key: 'id');
+    GlobalVar.user?.username != SharedPrefHelper.getData(key: 'username');
+    GlobalVar.user?.email != SharedPrefHelper.getData(key: 'email');
+    GlobalVar.user?.password != SharedPrefHelper.getData(key: 'password');
   }
 
-  static const platform = MethodChannel("com.example.sum_cap/intent");
+  // late StreamSubscription _intentSub;
+  // final _sharedFiles = <SharedMediaFile>[];
 
-  @override
-  void checkAudioReceived(Context) {
-    platform.setMethodCallHandler((call) async {
-      if (call.method == 'receiveAudio') {
-        final String audioPath = call.arguments;
-        _handleSharedAudio(audioPath, context);
-      }
-    });
-  }
+  // @override
+  // void checkAudioReceived(BuildContext context) {
+  //   _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen((value) {
+  //     _sharedFiles.clear();
+  //     if (value.isNotEmpty) {
+  //       _sharedFiles.addAll(value);
 
-  void _handleSharedAudio(String audioPath, context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showDialog(
-        context: context,
-        builder: (context) => CustomDialogWidget(audioPath: audioPath),
-      );
-    });
-  }
+  //       for (var file in _sharedFiles) {
+  //         log("file path : ${file.path}");
+  //         _handleSharedAudio(file.path, context);
+  //       }
+  //     } else {
+  //       log('No shared files received');
+  //     }
+  //   }, onError: (err) {
+  //     print("getIntentDataStream error: $err");
+  //   });
+
+  //   // Get the media sharing coming from outside the app while the app is closed.
+  //   ReceiveSharingIntent.instance.getInitialMedia().then((value) {
+  //     _sharedFiles.clear();
+  //     if (value.isNotEmpty) {
+  //       _sharedFiles.addAll(value);
+
+  //       for (var file in _sharedFiles) {
+  //         log("file path : ${file.path}");
+  //         _handleSharedAudio(file.path, context);
+  //       }
+  //     } else {
+  //       log('No initial shared files received');
+  //     }
+
+  //     // WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     //   showDialog(
+  //     //     context: context,
+  //     //     builder: (context) => CustomDialogWidget(audioPath: audioPath),
+  //     //   );
+  //     // });
+
+  //     // Tell the library that we are done processing the intent.
+  //     ReceiveSharingIntent.instance.reset();
+  //   });
+  // }
+
+  // void _handleSharedAudio(String audioPath, context) {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) => CustomDialogWidget(audioPath: audioPath),
+  //     );
+  //   });
+  // }
 }

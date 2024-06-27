@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sum_cap/config/themes/colors.dart';
-import 'package:sum_cap/core/cach_helper.dart';
+import 'package:sum_cap/core/shared_pref_helper.dart';
 import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/core/widgets/custom_form_field.dart';
 import 'package:sum_cap/features/auth/presentation/cubit/auth_cubit.dart';
@@ -155,16 +155,16 @@ class RegisterScreen extends StatelessWidget {
                                       cubit.usernameController.clear();
                                       cubit.emailController.clear();
                                       cubit.passwordController.clear();
-                                      CachHelper.saveData(
+                                      SharedPrefHelper.saveData(
                                           key: 'token',
                                           value: '${state.user.token}');
-                                      CachHelper.saveData(
+                                      SharedPrefHelper.saveData(
                                           key: 'username',
                                           value: state.user.username);
-                                      CachHelper.saveData(
+                                      SharedPrefHelper.saveData(
                                           key: 'email',
                                           value: state.user.email);
-                                      CachHelper.saveData(
+                                      SharedPrefHelper.saveData(
                                           key: 'password',
                                           value: state.user.password);
                                     }

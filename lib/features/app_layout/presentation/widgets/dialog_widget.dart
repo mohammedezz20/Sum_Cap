@@ -265,8 +265,8 @@ class CustomDialogWidget extends StatelessWidget {
                     );
                     cubit.audios.add(audioModel);
                     Navigator.pop(context); // Close the dialog
-                    Navigator.pop(
-                        context); // Close the previous screen if needed
+                    // Navigator.pop(
+                    //     context); // Close the previous screen if needed
 
                     await cubit
                         .transcriptFile(audioPath, audioModel.audioName,

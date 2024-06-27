@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sum_cap/config/themes/colors.dart';
-import 'package:sum_cap/core/cach_helper.dart';
+import 'package:sum_cap/core/shared_pref_helper.dart';
 import 'package:sum_cap/dependcy_injection.dart';
 import 'package:sum_cap/features/auth/data/models/user_model.dart';
 import 'package:sum_cap/features/user_profile/domain/usecases/user_usecases.dart';
@@ -16,7 +16,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   UserProfileCubit() : super(UserProfileInitial());
   final _repo = sl<UserUseCase>();
   var usernameController =
-      TextEditingController(text: CachHelper.getData(key: 'username'));
+      TextEditingController(text: SharedPrefHelper.getData(key: 'username'));
   List<Map<String, dynamic>> buttonModel = [
     {
       'name': 'Save Changes',
@@ -51,7 +51,7 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       } else {
         UserModel user = UserModel.fromJson(r['data']['user']);
         log(user.username);
-        CachHelper.saveData(key: 'username', value: user.username);
+        SharedPrefHelper.saveData(key: 'username', value: user.username);
         usernameController.text = user.username;
         emit(UserEditUserSuccessState(user.username));
       }
@@ -84,11 +84,11 @@ class UserProfileCubit extends Cubit<UserProfileState> {
 
   void logout() {
     emit(UserLoadingState());
-    CachHelper.saveData(key: 'token', value: '');
-    CachHelper.saveData(key: 'email', value: '');
-    CachHelper.saveData(key: 'password', value: '');
-    CachHelper.saveData(key: 'username', value: '');
-    CachHelper.saveData(key: 'isLogin', value: false);
+    SharedPrefHelper.saveData(key: 'token', value: '');
+    SharedPrefHelper.saveData(key: 'email', value: '');
+    SharedPrefHelper.saveData(key: 'password', value: '');
+    SharedPrefHelper.saveData(key: 'username', value: '');
+    SharedPrefHelper.saveData(key: 'isLogin', value: false);
     emit(const UserLogoutState());
   }
 }
