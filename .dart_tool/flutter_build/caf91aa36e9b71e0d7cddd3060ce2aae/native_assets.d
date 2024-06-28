@@ -1,1 +1,0 @@
- D:\\Flutter\ Projects\\Sum_Cap\\.dart_tool\\flutter_build\\caf91aa36e9b71e0d7cddd3060ce2aae\\native_assets.yaml: 

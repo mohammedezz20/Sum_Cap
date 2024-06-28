@@ -42,7 +42,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
         builder: (context, snapshot) {
           return Container(
             alignment: Alignment.center,
-            height: 220.h,
+            height: 250.h,
             color: AppColor.offWhiteColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -166,9 +166,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                     inactiveTrackColor: const Color(0xffeeeeee),
                     value: cubit.isArabic,
                     onChanged: (value) {
-                      cubit.isArabic = value;
-                      print(cubit.isArabic);
-                      setState(() {});
+                      cubit.changeLang(value);
                     },
                   ),
                 ),

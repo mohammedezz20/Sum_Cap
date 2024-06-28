@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/enums.dart';
 import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
@@ -246,6 +247,18 @@ class _RecordDetailsState extends State<RecordDetails> {
                                       width: 93.w,
                                       height: 36.h,
                                     ),
+                              15.w.sizedBoxWidth,
+                              OptionButton(
+                                buttonText: 'Share',
+                                icon: FontAwesomeIcons.share,
+                                onTap: () async {
+                                  await Share.share(
+                                    "${widget.audio.transcriptionText}\n${widget.audio.audioUrl}",
+                                  );
+                                },
+                                width: 93.w,
+                                height: 36.h,
+                              ),
                               15.w.sizedBoxWidth,
                               widget.isEnglish
                                   ? Row(

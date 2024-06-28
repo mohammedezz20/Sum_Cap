@@ -13,7 +13,9 @@ Future<void> main() async {
   await di.init();
   await SharedPrefHelper.init();
   bool? isLogin = SharedPrefHelper.getData(key: 'isLogin') ?? false;
+  bool? isFirst = SharedPrefHelper.getData(key: 'isFirst') ?? true;
   runApp(MainApp(
     isLogin: isLogin!,
+    isFirst: isFirst!,
   ));
 }

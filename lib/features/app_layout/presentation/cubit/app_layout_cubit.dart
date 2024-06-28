@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path/path.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:sum_cap/core/utils/api_constants.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
@@ -270,68 +271,81 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
   //   log("error in uploading audio$responseData");
   //   return responseData;
   // }
-  Future<void> download(String id, context) async {
-    // Get video metadata.
-    final video = await yt.videos.get(id);
 
-    // Get the video manifest.
-    final manifest = await yt.videos.streamsClient.getManifest(id);
-    final streams = manifest.audioOnly;
-    final audio = streams.withHighestBitrate();
-    final audioStream = yt.videos.streamsClient.get(audio);
-
-    final fileName = '${video.title}.${audio.container.name}'
-        .replaceAll(r'\', '')
-        .replaceAll('.mp4', '')
-        .replaceAll('.webm', '')
-        .replaceAll('/', '')
-        .replaceAll('*', '')
-        .replaceAll('?', '')
-        .replaceAll('"', '')
-        .replaceAll('<', '')
-        .replaceAll('>', '')
-        .replaceAll('|', '');
-    final appDir = Directory('/storage/emulated/0/Download');
-    final file = File(
-        '${'${appDir.path}/$fileName'.replaceAll('.webm', '').replaceAll('.mp4', '')}.mp3');
-    log(file.path);
-    // Delete the file if exists.
-    if (file.existsSync()) {
-      file.deleteSync();
+  Future<void> requestStoragePermission() async {
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
     }
+  }
 
-    // Open the file in writeAppend.
-    final output = file.openWrite(mode: FileMode.writeOnlyAppend);
+  Future<void> download(String id) async {
+    try {
+      // Ensure storage permission is granted
+      await requestStoragePermission();
 
-    // Track the file download status.
-    final len = audio.size.totalBytes;
-    var count = 0;
+      // Initialize YoutubeExplode
+      final yt = YoutubeExplode();
 
-    // Create the message and set the cursor position.
-    final msg = 'Downloading ${video.title}.${audio.container.name}';
-    stdout.writeln(msg);
+      // Get video metadata
+      var video = await yt.videos.get(id);
 
-    // Listen for data received.
-    await for (final data in audioStream) {
-      // Keep track of the current downloaded data.
-      count += data.length;
+      // Get the best audio stream
+      var manifest = await yt.videos.streamsClient.getManifest(id);
+      var audio = manifest.audioOnly.withHighestBitrate();
+      var audioStream = yt.videos.streamsClient.get(audio);
 
-      // Calculate the current progress.
-      final progress = ((count / len) * 100).ceil();
+      // Prepare file name for download
+      var fileName = '${video.title}.${audio.container.name}'.replaceAll(
+          RegExp(r'[\\/:*?"<>|]'), ''); // Replace invalid characters
 
-      log(progress.toStringAsFixed(2));
-      // Write to file.
-      output.add(data);
+      // Ensure the download directory exists
+      var appDir = Directory('/storage/emulated/0/Download');
+      if (!await appDir.exists()) {
+        await appDir.create(recursive: true);
+      }
+
+      // Create the file to save the downloaded audio
+      var filePath = '${appDir.path}/$fileName';
+      var file = File(filePath);
+
+      // Delete file if already exists
+      if (await file.exists()) {
+        await file.delete();
+      }
+
+      // Open file for writing
+      var output = file.openWrite(mode: FileMode.writeOnlyAppend);
+
+      // Track download progress
+      var len = audio.size.totalBytes;
+      var count = 0;
+
+      // Output initial message
+      stdout.writeln('Downloading $fileName');
+
+      // Listen for data and write to file
+      await audioStream.forEach((data) {
+        count += data.length;
+        var progress = ((count / len) * 100).ceil();
+        stdout.write('Downloading $progress% \r');
+        output.add(data);
+      });
+
+      // Close file stream
+      await output.close();
+
+      // Output completion message
+      stdout.writeln('Downloaded $fileName');
+      log('Downloaded $fileName');
+    } catch (e) {
+      // Handle errors
+      stderr.writeln('Error downloading video: $e');
+      log('Error downloading video: $e');
+    } finally {
+      // Ensure YoutubeExplode is properly closed
+      yt.close();
     }
-    await output.close();
-    log('Downloaded ${video.title}.${audio.container.name}');
-    filePath = file.path;
-
-    String fileUri = '$filePath';
-
-    log('Picked MP3 file path: $fileUri');
-    audioDuration = video.duration.toString().substring(2, 7);
-    log('================ audio type ${audio.codec.change(subtype: 'mp3')}');
   }
 
   getdata() {

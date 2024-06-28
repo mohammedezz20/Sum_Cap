@@ -43,6 +43,10 @@ dependencies:
   sound_stream: ^0.4.1
   flutter_launcher_icons: ^0.13.1
   receive_sharing_intent: ^1.8.0
+  connectivity_plus: ^6.0.3
+  share_plus: ^9.0.0
+  flutter_downloader: ^1.11.7
+  ffmpeg_kit_flutter: ^6.0.3
 
 
 dev_dependencies:

@@ -18,17 +18,16 @@ class ChatBotCubit extends Cubit<ChatBotStates> {
     emit(ChatBotInitState());
   }
 
-  askChatBot(String transcriptionText) async {
-    String question = textController.text;
+  askChatBot(String transcriptionText, String question) async {
     chatList.add(
       ChatModel(
           chat: 0,
-          message: textController.text,
+          message: question,
           time: "${DateTime.now().hour}:${DateTime.now().second}"),
     );
 
     chatList.add(
-      ChatModel(chatType: ChatType.loading, chat: 1, message: "", time: ""),
+      ChatModel(chatType: ChatType.loading, chat: 1, message: '', time: ""),
     );
     messages.add({
       "text": "$transcriptionText\n$question",

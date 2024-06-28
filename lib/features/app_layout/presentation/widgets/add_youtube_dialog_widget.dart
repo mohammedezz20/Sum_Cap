@@ -13,8 +13,8 @@ import 'package:sum_cap/features/app_layout/presentation/cubit/app_layout_states
 import '../../../../config/themes/colors.dart';
 
 class YoutubeDialog extends StatefulWidget {
-  const YoutubeDialog({super.key});
-
+  YoutubeDialog({super.key, this.url = ''});
+  String url;
   @override
   State<YoutubeDialog> createState() => _YoutubeDialogState();
 }
@@ -25,7 +25,8 @@ class _YoutubeDialogState extends State<YoutubeDialog> {
     var cubit = AppLayoutCubit.get(context);
     var key = GlobalKey<FormState>();
     var namecontroller = TextEditingController();
-    var urlController = TextEditingController();
+    var urlController = TextEditingController(text: widget.url);
+
     return BlocConsumer<AppLayoutCubit, AppLayoutStates>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -131,15 +132,13 @@ class _YoutubeDialogState extends State<YoutubeDialog> {
                   width: double.infinity,
                   onTap: () async {
                     if (key.currentState?.validate() == true) {
-                      cubit
-                          .download(urlController.text, context)
-                          .whenComplete(() async {
+                      cubit.download(urlController.text).whenComplete(() async {
                         AudioModel audioModel = AudioModel(
                           audioUrl: cubit.filePath ?? '',
                           title: namecontroller.text,
                           transcriptionText: '',
                           createdAt: DateTime.now(),
-                          duration: cubit.audioDuration!,
+                          duration: cubit.audioDuration ?? '',
                           audioName: namecontroller.text +
                               DateTime.now().millisecondsSinceEpoch.toString(),
                           status: FileStatus.trancripting,
@@ -195,9 +194,8 @@ class _YoutubeDialogState extends State<YoutubeDialog> {
                   inactiveTrackColor: const Color(0xffeeeeee),
                   value: cubit.isArabic,
                   onChanged: (value) {
-                    cubit.isArabic = value;
+                    cubit.changeLang(value);
                     print(cubit.isArabic);
-                    setState(() {});
                   },
                 ),
               ),
@@ -233,7 +231,7 @@ void showCustomDialog(BuildContext context) {
     context: context,
     barrierDismissible: false, // Prevents closing on tapping outside
     builder: (BuildContext context) {
-      return const YoutubeDialog();
+      return YoutubeDialog();
     },
   );
 }
