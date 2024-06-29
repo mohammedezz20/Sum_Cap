@@ -297,17 +297,19 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
 
       // Prepare file name for download
       var fileName = '${video.title}.${audio.container.name}'.replaceAll(
-          RegExp(r'[\\/:*?"<>|]'), ''); // Replace invalid characters
+          RegExp(r'[\\/:*?"<>|]'), '').replaceAll('.mp4', '.mp3')
+          .replaceAll('.webm', '.mp3'); // Replace invalid characters
 
       // Ensure the download directory exists
       var appDir = Directory('/storage/emulated/0/Download');
+      final file = File(
+          '${'${appDir!.path}/$fileName'.replaceAll('.webm', '').replaceAll('.mp4', '')}.mp3');
       if (!await appDir.exists()) {
         await appDir.create(recursive: true);
       }
 
       // Create the file to save the downloaded audio
-      var filePath = '${appDir.path}/$fileName';
-      var file = File(filePath);
+      filePath = file.path;
 
       // Delete file if already exists
       if (await file.exists()) {
@@ -338,6 +340,7 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
       // Output completion message
       stdout.writeln('Downloaded $fileName');
       log('Downloaded $fileName');
+      audioDuration = video.duration.toString().substring(2, 7);
     } catch (e) {
       // Handle errors
       stderr.writeln('Error downloading video: $e');
