@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:sum_cap/core/utils/api_constants.dart';
@@ -296,14 +297,16 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
       var audioStream = yt.videos.streamsClient.get(audio);
 
       // Prepare file name for download
-      var fileName = '${video.title}.${audio.container.name}'.replaceAll(
-          RegExp(r'[\\/:*?"<>|]'), '').replaceAll('.mp4', '.mp3')
+      var fileName = '${video.title}.${audio.container.name}'
+          .replaceAll(RegExp(r'[\\/:*?"<>|]'), '')
+          .replaceAll('.mp4', '.mp3')
           .replaceAll('.webm', '.mp3'); // Replace invalid characters
 
       // Ensure the download directory exists
-      var appDir = Directory('/storage/emulated/0/Download');
-      final file = File(
-          '${'${appDir!.path}/$fileName'.replaceAll('.webm', '').replaceAll('.mp4', '')}.mp3');
+      Directory appDir = await getApplicationDocumentsDirectory();
+      final file = File('${appDir.path}/$fileName'
+          .replaceAll('.webm', 'mp3')
+          .replaceAll('.mp4', 'mp3'));
       if (!await appDir.exists()) {
         await appDir.create(recursive: true);
       }

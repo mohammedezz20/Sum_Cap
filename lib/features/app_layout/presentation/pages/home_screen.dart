@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         // Check if the shared file is a YouTube video
         if (isYouTubeVideo(file.path)) {
-          _handleSharedAudio(file.path, context, isyoutube: true);
+          return; // _handleSharedAudio(file.path, context, isyoutube: true);
         } else {
           final player = AudioPlayer();
           await player.setAudioSource(AudioSource.uri(Uri.parse(file.path)));
@@ -138,11 +138,13 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
         context: context,
-        builder: (context) => isyoutube
-            ? YoutubeDialog(
-                url: audioPath,
-              )
-            : CustomDialogWidget(audioPath: audioPath),
+        builder: (context) {
+          if (isyoutube) {
+            return YoutubeDialog(url: audioPath);
+          } else {
+            return CustomDialogWidget(audioPath: audioPath);
+          }
+        },
       );
     });
   }
