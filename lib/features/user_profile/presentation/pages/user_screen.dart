@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sum_cap/config/themes/colors.dart';
-import 'package:sum_cap/core/cach_helper.dart';
+import 'package:sum_cap/core/shared_pref_helper.dart';
 import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/core/widgets/custom_button.dart';
@@ -53,7 +53,7 @@ class UserScreen extends StatelessWidget {
               height: 45.h,
               width: double.infinity,
               onTap: () {
-                cubit.editUser(CachHelper.getData(key: 'token'),
+                cubit.editUser(SharedPrefHelper.getData(key: 'token'),
                     cubit.usernameController.text);
               },
             ),
@@ -71,8 +71,8 @@ class UserScreen extends StatelessWidget {
               onTap: () {
                 context.jumpToAndRemove(
                   ResetPasswordScreen(
-                    accessToken: CachHelper.getData(key: 'token'),
-                    oldPassword: CachHelper.getData(key: 'password'),
+                    accessToken: SharedPrefHelper.getData(key: 'token'),
+                    oldPassword: SharedPrefHelper.getData(key: 'password'),
                   ),
                 );
               },
@@ -90,7 +90,7 @@ class UserScreen extends StatelessWidget {
                 width: double.infinity,
                 colorBorder: AppColor.redColor,
                 onTap: () {
-                  cubit.deleteUser(CachHelper.getData(key: 'token'));
+                  cubit.deleteUser(SharedPrefHelper.getData(key: 'token'));
                   if (state is UserDeleteUserSuccessState) {
                     context.jumpToAndRemove(const LoginScreen());
                   }

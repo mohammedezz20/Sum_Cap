@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sum_cap/config/routes/app_routes.dart';
 import 'package:sum_cap/config/themes/colors.dart';
+import 'package:sum_cap/core/shared_pref_helper.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
 import 'package:sum_cap/features/auth/presentation/pages/onboarding.dart';
 
@@ -31,6 +32,7 @@ class OnBoardingItem extends StatelessWidget {
                   style: TextStyle(color: AppColor.primaryColor),
                 ),
                 onPressed: () {
+                  SharedPrefHelper.saveData(key: "isFirst", value: false);
                   Navigator.pushNamed(context, Routes.login);
                 },
               )

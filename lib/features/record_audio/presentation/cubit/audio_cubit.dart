@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/record_audio/domain/usecases/audio_usecase.dart';
 import 'package:sum_cap/features/record_audio/presentation/pages/record_details.dart';
+import 'package:sum_cap/features/record_audio/presentation/pages/summarization.dart';
 import 'package:sum_cap/features/record_audio/presentation/widgets/translate_text.dart';
 
 import '../../../../dependcy_injection.dart';
@@ -23,7 +24,7 @@ class AudioCubit extends Cubit<AudioState> {
   Future<void> deleteAudio(AudioModel audio, context) async {
     emit(DeleteAudioLoadingState(audio.title));
 
-    var result = await _useCase.deleteAudio(audio.audioId!);
+    var result = await _useCase.deleteAudio(audio.audioId ?? '');
     result.fold((l) {
       emit(DeleteAudioErrorState(l.toString(), audio.title));
     }, (r) {
@@ -109,17 +110,27 @@ class AudioCubit extends Cubit<AudioState> {
 
   summarizeText(String transcriptionText, context) async {
     emit(SummarizeAudioLoadingState());
-    var response = await _useCase.summarizeText(transcriptionText);
+    var response = await _useCase.summarizeText(
+        transcriptionText, !isEnglish(transcriptionText));
     response.fold((l) {
       emit(SummarizeAudioErrorState(l.toString()));
     }, (r) {
       emit(SummarizeAudioSuccessState(r));
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return DialogWidget(r);
-        },
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SummarizationScreens(
+            SummaryText: r,
+            isArabic: !isEnglish(r),
+          ),
+        ),
       );
+      // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return DialogWidget(r);
+      //   },
+      // );
     });
   }
 
@@ -138,5 +149,10 @@ class AudioCubit extends Cubit<AudioState> {
     _position = newPosition;
 
     emit(ChangePosition());
+  }
+
+  bool isEnglish(String text) {
+    final englishRegExp = RegExp(r'[A-Za-z]');
+    return englishRegExp.hasMatch(text);
   }
 }

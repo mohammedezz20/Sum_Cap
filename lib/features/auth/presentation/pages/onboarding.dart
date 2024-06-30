@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:sum_cap/core/shared_pref_helper.dart';
 import 'package:sum_cap/core/utils/assets_manager.dart';
 import 'package:sum_cap/features/auth/presentation/widgets/onboarding_widget.dart';
 
@@ -125,6 +126,8 @@ class _OnBoardingState extends State<OnBoarding> {
                           ),
                           onPressed: () {
                             Navigator.pushNamed(context, Routes.login);
+                            SharedPrefHelper.saveData(
+                                key: "isFirst", value: false);
                           },
                         ),
                 ],

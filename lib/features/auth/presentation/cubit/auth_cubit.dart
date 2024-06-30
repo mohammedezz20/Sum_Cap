@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sum_cap/core/cach_helper.dart';
+import 'package:sum_cap/core/shared_pref_helper.dart';
 import 'package:sum_cap/core/global.dart';
 import 'package:sum_cap/features/auth/data/models/user_model.dart';
 import 'package:sum_cap/features/auth/domain/usecases/auth_use_case.dart';
@@ -157,5 +157,74 @@ class AuthCubit extends Cubit<AuthState> {
         emit(AuthResetPasswordSuccessState(r['message']));
       }
     });
+  }
+
+  String passwordStrength = 'Weak';
+  double strengthValue = 0.0;
+  bool hasMinLength = false;
+  bool hasUpperCase = false;
+  bool hasNumber = false;
+  bool hasNoSpaces = false;
+  bool isMatch = false;
+
+  void checkPasswordsMatchs(String password, String confirmPassword) {
+    if (password == confirmPassword) {
+      isMatch = true;
+      emit(CheckPasswordMatchTrue());
+    } else {
+      isMatch = false;
+      emit(CheckPasswordMatchFalse());
+    }
+  }
+
+  void checkPasswordStrength(String password) {
+    passwordStrength = evaluatePasswordStrength(password);
+    strengthValue = calculateStrengthValue(password);
+    hasMinLength = password.length >= 8 && password.length <= 20;
+    hasUpperCase = password.contains(RegExp(r'[A-Z]'));
+    hasNumber = password.contains(RegExp(r'[0-9]'));
+    hasNoSpaces = !password.contains(' ');
+
+    emit(CheckPasswordStrength());
+  }
+
+  String evaluatePasswordStrength(String password) {
+    int score = 0;
+    emit(EvaluatePasswordStrength());
+    if (password.length >= 8 && password.length <= 20) score++;
+    if (password.contains(RegExp(r'[a-z]'))) score++;
+    if (password.contains(RegExp(r'[A-Z]'))) score++;
+    if (password.contains(RegExp(r'[0-9]'))) score++;
+    if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) score++;
+
+    if (score <= 2) return 'Weak';
+    if (score == 3) return 'Medium';
+    if (score == 4) return 'Strong';
+    if (score == 5) return 'Very Strong';
+
+    return 'Invalid';
+  }
+
+  double calculateStrengthValue(String password) {
+    emit(CalculatePasswordStrength());
+    int score = 0;
+
+    if (password.length >= 8 && password.length <= 20) score++;
+    if (password.contains(RegExp(r'[a-z]'))) score++;
+    if (password.contains(RegExp(r'[A-Z]'))) score++;
+    if (password.contains(RegExp(r'[0-9]'))) score++;
+    if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) score++;
+
+    return score / 5.0; // Normalize to a value between 0 and 1
+  }
+
+  void resetAllPasswordChecker() {
+    strengthValue = 0.0;
+    hasMinLength = false;
+    hasUpperCase = false;
+    hasNumber = false;
+    hasNoSpaces = false;
+    isMatch = false;
+    emit(ResetPasswordStrength());
   }
 }

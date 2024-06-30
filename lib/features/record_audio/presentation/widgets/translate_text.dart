@@ -24,6 +24,9 @@ class DialogWidget extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.r),
+          ),
           backgroundColor: AppColor.offWhiteColor,
           title: Center(
               child: isTranslated

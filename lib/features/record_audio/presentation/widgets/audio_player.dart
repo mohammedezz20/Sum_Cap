@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:record/record.dart';
@@ -22,9 +25,14 @@ class AudioPlayerView extends StatelessWidget {
   }
 }
 
-class AudioPlayerWidget extends StatelessWidget {
+class AudioPlayerWidget extends StatefulWidget {
   const AudioPlayerWidget({super.key});
 
+  @override
+  State<AudioPlayerWidget> createState() => _AudioPlayerWidgetState();
+}
+
+class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   @override
   Widget build(BuildContext context) {
     AudioRecoedCubit audioRecorderController = AudioRecoedCubit.get(context);
@@ -36,8 +44,8 @@ class AudioPlayerWidget extends StatelessWidget {
         builder: (context, snapshot) {
           return Container(
             alignment: Alignment.center,
-            height: 180.h,
-            color: AppColor.whiteColor,
+            height: 250.h,
+            color: AppColor.offWhiteColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -61,7 +69,7 @@ class AudioPlayerWidget extends StatelessWidget {
                         final String? path =
                             await audioRecorderController.stop();
 
-//ToDo: Don't forget delete audio file from devise
+                        //ToDo: Don't forget delete audio file from devise
                         // audioRecorderController.delete(path!);
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -128,7 +136,8 @@ class AudioPlayerWidget extends StatelessWidget {
                         Navigator.pop(context);
 
                         await cubit
-                            .transcriptFile(path, audioModel.audioName)
+                            .transcriptFile(path, audioModel.audioName,
+                                isArabic: cubit.isArabic)
                             .whenComplete(() {
                           audioModel.transcriptionText =
                               cubit.transcriptionText ?? '';
@@ -144,24 +153,27 @@ class AudioPlayerWidget extends StatelessWidget {
                           cubit.transcriptionText = '';
                           cubit.audioDuration = '';
                         });
-                        // await cubit
-                        //     .transcripeFile(path, audioModel.audioName)
-                        //     .whenComplete(() {
-                        //   audioModel.transcriptionText =
-                        //       cubit.transcriptionText ?? '';
-                        //   cubit
-                        //       .uploadFile(audioModel: audioModel)
-                        //       .whenComplete(() {
-                        //     // audioRecorderController.delete(audioModel.audio);
-                        //   });
-                        //   audioCubit.nameController.clear();
-                        //   cubit.filePath = '';
-                        //   cubit.transcriptionText = '';
-                        //   cubit.audioDuration = '';
-                        // });
                       },
                     ),
                   ],
+                ),
+                ListTile(
+                  title: Text(
+                    'Transcript Language (${cubit.isArabic ? 'Arabic' : 'English'})',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  trailing: Switch(
+                    inactiveThumbColor: const Color(0xffffffff),
+                    activeTrackColor: const Color(0xff335ef7),
+                    inactiveTrackColor: const Color(0xffeeeeee),
+                    value: cubit.isArabic,
+                    onChanged: (value) {
+                      cubit.changeLang(value);
+                      setState(
+                          () {}); // Ensure the switch rebuilds with the new state
+                      log(cubit.isArabic.toString());
+                    },
+                  ),
                 ),
               ],
             ),
@@ -183,7 +195,6 @@ class _timer extends StatelessWidget {
             final int durationInSeconds = snapshot.data ?? 0;
             final int minutes = durationInSeconds ~/ 60;
             final int seconds = durationInSeconds % 60;
-
             return Text(
                 '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
                 style: const TextStyle(

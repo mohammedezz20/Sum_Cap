@@ -105,7 +105,7 @@ class _AdvancedAudioPlayerState extends State<AdvancedAudioPlayer>
       advancedPlayer.pause();
       log("App is in background");
     } else if (state == AppLifecycleState.resumed) {
-      context.jumpToAndRemove(const AppLayout());
+      Navigator.pop(context);
 
       log("App is resumed");
     } else if (state == AppLifecycleState.paused) {
