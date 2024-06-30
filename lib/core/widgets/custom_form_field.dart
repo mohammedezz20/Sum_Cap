@@ -11,8 +11,12 @@ class CustomFormField extends StatelessWidget {
   Widget? prefix;
   int? maxLines;
   String? Function(String?)? validator;
+  Function(String?)? onChang;
+  Function()? onTap;
   Function(PointerDownEvent)? onTapOutside;
   Color backgroundColor;
+
+  FocusNode? foucusNode;
 
   CustomFormField({
     super.key,
@@ -23,8 +27,11 @@ class CustomFormField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.suffix,
     this.prefix,
+    this.foucusNode,
     this.maxLines = 1,
     this.validator,
+    this.onChang,
+    this.onTap,
     this.backgroundColor = AppColor.whiteColor,
     this.onTapOutside,
   });
@@ -35,7 +42,10 @@ class CustomFormField extends StatelessWidget {
       onTapOutside: onTapOutside,
       validator: validator,
       maxLines: maxLines,
+      onChanged: onChang,
+      focusNode: foucusNode,
       controller: controller,
+      onTap: onTap,
       obscureText: isPassword,
       keyboardType: keyboardType,
       decoration: InputDecoration(

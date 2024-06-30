@@ -120,3 +120,17 @@ class AuthVerifyCodeFailerState extends AuthState {
   @override
   List<Object> get props => [message];
 }
+
+class CheckPasswordStrength extends AuthState {}
+
+class CalculatePasswordStrength extends AuthState {}
+
+class EvaluatePasswordStrength extends AuthState {}
+
+class ResetPasswordStrength extends AuthState {}
+
+class ScrollController extends AuthState {}
+
+class CheckPasswordMatchTrue extends AuthState {}
+
+class CheckPasswordMatchFalse extends AuthState {}

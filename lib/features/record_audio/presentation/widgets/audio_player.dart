@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -67,7 +69,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                         final String? path =
                             await audioRecorderController.stop();
 
-//ToDo: Don't forget delete audio file from devise
+                        //ToDo: Don't forget delete audio file from devise
                         // audioRecorderController.delete(path!);
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -167,6 +169,9 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
                     value: cubit.isArabic,
                     onChanged: (value) {
                       cubit.changeLang(value);
+                      setState(
+                          () {}); // Ensure the switch rebuilds with the new state
+                      log(cubit.isArabic.toString());
                     },
                   ),
                 ),

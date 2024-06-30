@@ -149,8 +149,9 @@ class _YoutubeDialogState extends State<YoutubeDialog> {
 
                         await cubit
                             .transcriptFile(
-                                cubit.filePath, audioModel.audioName,
-                                isArabic: cubit.isArabic)
+                          cubit.filePath,
+                          audioModel.audioName,
+                        )
                             .whenComplete(() {
                           audioModel.transcriptionText =
                               cubit.transcriptionText ?? '';
@@ -195,7 +196,7 @@ class _YoutubeDialogState extends State<YoutubeDialog> {
                   value: cubit.isArabic,
                   onChanged: (value) {
                     cubit.changeLang(value);
-                    print(cubit.isArabic);
+                    log(cubit.isArabic.toString());
                   },
                 ),
               ),

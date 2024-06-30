@@ -62,7 +62,6 @@ class LoginScreen extends StatelessWidget {
                         child: CustomFormField(
                           controller: cubit.loginPasswordController,
                           isPassword: cubit.isPassword,
-                          keyboardType: TextInputType.number,
                           labelText: 'Password',
                           suffix: IconButton(
                             onPressed: cubit.changePasswordIcon,
@@ -148,6 +147,7 @@ class LoginScreen extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
+                              cubit.resetAllPasswordChecker();
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

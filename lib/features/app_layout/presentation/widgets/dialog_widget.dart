@@ -317,7 +317,7 @@ class CustomDialogWidget extends StatelessWidget {
                   value: cubit.isArabic,
                   onChanged: (value) {
                     cubit.changeLang(value);
-                    print(cubit.isArabic);
+                    log(cubit.isArabic.toString());
                   },
                 ),
               ),

@@ -37,53 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  // void checkAudioReceived(BuildContext context) {
-  //   _intentSub =
-  //       ReceiveSharingIntent.instance.getMediaStream().listen((value) async {
-  //     await handleSharedFiles(value, context);
-  //   }, onError: (err) {
-  //     print("getIntentDataStream error: $err");
-  //   });
-
-  //   // Get the media sharing coming from outside the app while the app is closed.
-  //   ReceiveSharingIntent.instance.getInitialMedia().then((value) {
-  //     handleSharedFiles(value, context);
-  //   });
-  // }
-
-  // Future<void> handleSharedFiles(
-  //     List<SharedMediaFile> value, BuildContext context) async {
-  //   _sharedFiles.clear();
-  //   if (value.isNotEmpty) {
-  //     _sharedFiles.addAll(value);
-
-  //     for (var file in _sharedFiles) {
-  //       log("file path : ${file.path}");
-  //       final player = AudioPlayer();
-  //       await player.setAudioSource(AudioSource.uri(Uri.parse(file.path)));
-  //       final duration = await player.durationStream.first;
-  //       await player.dispose();
-  //       if (context.mounted) {
-  //         AppLayoutCubit.get(context).audioDuration =
-  //             duration.toString().substring(2, 7);
-  //         log(AppLayoutCubit.get(context).audioDuration!);
-  //         _handleSharedAudio(file.path, context);
-  //       }
-  //     }
-  //   } else {
-  //     log('No shared files received');
-  //   }
-  // }
-
-  // void _handleSharedAudio(String audioPath, context) {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     showDialog(
-  //       context: context,
-  //       builder: (context) => CustomDialogWidget(audioPath: audioPath),
-  //     );
-  //   });
-  // }
-
   void checkAudioReceived(BuildContext context) {
     _intentSub =
         ReceiveSharingIntent.instance.getMediaStream().listen((value) async {

@@ -24,7 +24,7 @@ class AudioCubit extends Cubit<AudioState> {
   Future<void> deleteAudio(AudioModel audio, context) async {
     emit(DeleteAudioLoadingState(audio.title));
 
-    var result = await _useCase.deleteAudio(audio.audioId!);
+    var result = await _useCase.deleteAudio(audio.audioId ?? '');
     result.fold((l) {
       emit(DeleteAudioErrorState(l.toString(), audio.title));
     }, (r) {

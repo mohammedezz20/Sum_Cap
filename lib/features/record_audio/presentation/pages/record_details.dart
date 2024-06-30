@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +14,7 @@ import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/utils/enums.dart';
 import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
 import 'package:sum_cap/core/utils/extensions/sized_box_extensions.dart';
+import 'package:sum_cap/core/widgets/custom_button.dart';
 import 'package:sum_cap/features/app_layout/data/models/audio_model.dart';
 import 'package:sum_cap/features/record_audio/presentation/cubit/audio_cubit.dart';
 import 'package:sum_cap/features/record_audio/presentation/pages/audio_topics.dart';
@@ -68,9 +71,12 @@ class _RecordDetailsState extends State<RecordDetails> {
                   actions: [
                     CupertinoButton(
                         onPressed: () {
-                          Navigator.pop(context);
-                          widget.audio.status = FileStatus.removing;
-                          cubit.deleteAudio(widget.audio, context);
+                          _showDeleteFileDialog(context, deleteFile: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            widget.audio.status = FileStatus.removing;
+                            cubit.deleteAudio(widget.audio, context);
+                          });
                         },
                         child: const Icon(
                           Icons.delete_outline,
@@ -293,13 +299,38 @@ class _RecordDetailsState extends State<RecordDetails> {
                                   icon: FontAwesomeIcons.layerGroup,
                                   onTap: () {
                                     var newaudioModel = widget.audio;
-                                    List<Topic> topic = [];
+                                    // List<Topic> topic = [];
+                                    // for (var element in widget.audio.topics!) {
+                                    //   if (element.topics.isNotEmpty) {
+                                    //     topic.add(element);
+                                    //   }
+                                    // }
+                                    // newaudioModel.topics = topic;
+
+                                    List<Topic> uniqueTopics = [];
+                                    Set<String> uniqueTopicNames = {};
+
                                     for (var element in widget.audio.topics!) {
-                                      if (element.topics.isNotEmpty) {
-                                        topic.add(element);
+                                      bool hasUniqueTopic = false;
+
+                                      for (var topicDetail in element.topics) {
+                                        if (!uniqueTopicNames.contains(
+                                            topicDetail.topic ?? '')) {
+                                          // Use the unique property of TopicDetail
+                                          uniqueTopicNames
+                                              .add(topicDetail.topic ?? '');
+                                          hasUniqueTopic = true;
+                                        }
+                                      }
+
+                                      if (hasUniqueTopic) {
+                                        uniqueTopics.add(element);
                                       }
                                     }
-                                    newaudioModel.topics = topic;
+
+                                    newaudioModel.topics = uniqueTopics;
+                                    log(uniqueTopics.length.toString());
+
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -308,6 +339,8 @@ class _RecordDetailsState extends State<RecordDetails> {
                                         ),
                                       ),
                                     );
+                                    // uniqueTopics.clear();
+                                    // uniqueTopicNames.clear();
                                   },
                                   width: 75.w,
                                   height: 36.h,
@@ -413,3 +446,52 @@ class _RecordDetailsState extends State<RecordDetails> {
 }
 
 enum DataStatus { readOnly, readAndWrite }
+
+Future<void> _showDeleteFileDialog(BuildContext context,
+    {required Function() deleteFile}) async {
+  return showDialog(
+    context: context,
+    barrierDismissible: false, // user must tap button to dismiss
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: AppColor.offWhiteColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        title: const Text('Delete File'),
+        content: const SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text('Do you really want to delete this file?'),
+            ],
+          ),
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: <Widget>[
+          CustomButton(
+            widget: const Text(
+              'Cancel',
+              style: TextStyle(color: AppColor.primaryColor),
+            ),
+            colorBorder: AppColor.primaryColor,
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            height: 40.h,
+            width: context.screenWidth * 0.2,
+          ),
+          CustomButton(
+            widget: const Text(
+              'Delete',
+              style: TextStyle(color: AppColor.redColor),
+            ),
+            colorBorder: AppColor.redColor,
+            onTap: deleteFile,
+            height: 40.h,
+            width: context.screenWidth * 0.2,
+          ),
+        ],
+      );
+    },
+  );
+}

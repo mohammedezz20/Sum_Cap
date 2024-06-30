@@ -2,6 +2,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sum_cap/config/themes/colors.dart';
 import 'package:sum_cap/core/shared_pref_helper.dart';
 import 'package:sum_cap/core/utils/extensions/build_context_extensions.dart';
@@ -77,7 +78,10 @@ class RegisterScreen extends StatelessWidget {
                           child: CustomFormField(
                             controller: cubit.passwordController,
                             isPassword: cubit.isPassword,
-                            keyboardType: TextInputType.number,
+                            onChang: (val) {
+                              cubit.checkPasswordStrength(val ?? '');
+                            },
+                            onTapOutside: (p0) {},
                             labelText: 'Password',
                             suffix: IconButton(
                               onPressed: cubit.changePasswordIcon,
@@ -100,8 +104,14 @@ class RegisterScreen extends StatelessWidget {
                           child: CustomFormField(
                             controller: cubit.confirmPasswordController,
                             isPassword: cubit.isPassword,
-                            keyboardType: TextInputType.number,
+                            onTapOutside: (p0) {},
+                            onChang: (val) {
+                              cubit.checkPasswordsMatchs(
+                                  cubit.passwordController.text,
+                                  cubit.confirmPasswordController.text);
+                            },
                             labelText: 'ConfirmPassword',
+                            onTap: () {},
                             suffix: IconButton(
                               onPressed: cubit.changePasswordIcon,
                               icon: cubit.isPassword
@@ -113,6 +123,30 @@ class RegisterScreen extends StatelessWidget {
                                     ),
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: context.h(5),
+                        ),
+                        PasswordCriteria(
+                          label: 'Passwords match',
+                          isValid: cubit.isMatch,
+                        ),
+                        const SizedBox(height: 15),
+                        PasswordCriteria(
+                          label: '8-20 Characters',
+                          isValid: cubit.hasMinLength,
+                        ),
+                        PasswordCriteria(
+                          label: 'At least one capital letter',
+                          isValid: cubit.hasUpperCase,
+                        ),
+                        PasswordCriteria(
+                          label: 'At least one number',
+                          isValid: cubit.hasNumber,
+                        ),
+                        PasswordCriteria(
+                          label: 'No spaces',
+                          isValid: cubit.hasNoSpaces,
                         ),
                         SizedBox(
                           height: context.h(15),
@@ -140,6 +174,16 @@ class RegisterScreen extends StatelessWidget {
                                           .isEmpty) {
                                     context.showAwesomeSnackbar(
                                         message: 'Please fill all fields',
+                                        title: '',
+                                        contentType: ContentType.failure);
+                                  } else if (cubit.hasMinLength == false ||
+                                      cubit.hasUpperCase == false ||
+                                      cubit.hasNumber == false ||
+                                      cubit.hasNoSpaces == false ||
+                                      cubit.isMatch == false) {
+                                    context.showAwesomeSnackbar(
+                                        message:
+                                            "please check password criteria",
                                         title: '',
                                         contentType: ContentType.failure);
                                   } else {
@@ -179,7 +223,7 @@ class RegisterScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Text(
-                                    'Create Account',
+                                    'Register',
                                     style:
                                         Theme.of(context).textTheme.titleMedium,
                                   ),
@@ -238,6 +282,38 @@ class RegisterScreen extends StatelessWidget {
           context.jumpToWithReplacement(const AppLayout());
         }
       },
+    );
+  }
+
+  Color getColorForStrength(double strengthValue) {
+    if (strengthValue < 0.4) {
+      return Colors.red;
+    } else if (strengthValue < 0.7) {
+      return Colors.yellow;
+    } else {
+      return Colors.green;
+    }
+  }
+}
+
+class PasswordCriteria extends StatelessWidget {
+  final String label;
+  final bool isValid;
+
+  const PasswordCriteria(
+      {super.key, required this.label, required this.isValid});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          isValid ? Icons.check_box : Icons.close,
+          color: isValid ? Colors.green : Colors.red,
+        ),
+        const SizedBox(width: 10),
+        Text(label),
+      ],
     );
   }
 }

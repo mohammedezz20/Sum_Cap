@@ -136,7 +136,7 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
               'diarize': true,
             }
           : {
-              'model': 'whisper-large',
+              'model': 'nova-2',
               'detect_language': true,
               'detect_topics': true,
               'smart_format': true,
@@ -154,6 +154,7 @@ class AppLayoutCubit extends Cubit<AppLayoutStates> {
       log('file path: $filepath');
 
       data = text.map;
+      log(data!.map.toString());
       log(text.transcript);
       transcriptionText = isArabic
           ? text.transcript
